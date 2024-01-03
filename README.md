@@ -25,7 +25,7 @@ DB_HOST=localhost # host(ip) of the database
 DB_PORT=3306 # port of the database
 DB_USER=root # username of the database
 DB_PASSWORD=pwd # password of the database
-DB_NAME=example # name of the database, which you created in the previous step
+DB_NAME=kubid # name of the database, which you created in the previous step
 ```
 
 If you are in production mode, create a `.env.prod` file in the root directory of the project and add the above configuration variables with the appropriate values.
