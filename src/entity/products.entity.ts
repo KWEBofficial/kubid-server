@@ -8,35 +8,63 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-
+import User from './user.entity';
 import Department from './department.entity';
-
 /*
-
-Table users {
+Table product {
   id integer [primary key]
-  password varchar
-  nickname varchar
-  email varchar
-  department_id varchar
+  product_name varchar
+  user_id integer
+  desc text [note: 'Content of the post']
+  status varchar
+  lower_bound integer
+  upper_bound integer
+  image_id integer
+  trading_place varchar
+  trading_time varchar
+  department_id integer
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
+
 }
+products.department_id > departments.id
+
 */
 @Entity()
-export default class User {
+export default class Product {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  password!: string;
+  productName!: string;
+
+  /////////참조를 위해 추가///////////
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
+  /////////참조를 위해 추가///////////
+
+  @Column('text', { comment: 'description of product' })
+  desc!: string;
 
   @Column()
-  nickname!: string;
+  status!: string;
 
   @Column()
-  email!: string;
+  lowerBound!: number;
+
+  @Column()
+  upperBound!: number;
+
+  @Column()
+  imageId!: number;
+
+  @Column()
+  tradingPlace!: string;
+
+  @Column()
+  tradingTime!: string;
 
   /////////참조를 위해 추가///////////
   @ManyToOne(() => Department)
