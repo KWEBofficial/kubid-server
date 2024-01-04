@@ -8,10 +8,10 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import Users from './user.entity';
-import Departments from './department.entity';
+import User from './user.entity';
+import Department from './department.entity';
 /*
-Table products {
+Table product {
   id integer [primary key]
   product_name varchar
   user_id integer
@@ -20,6 +20,8 @@ Table products {
   lower_bound integer
   upper_bound integer
   image_id integer
+  trading_place varchar
+  trading_time varchar
   department_id integer
   created_at timestamp
   updated_at timestamp
@@ -30,7 +32,7 @@ products.department_id > departments.id
 
 */
 @Entity()
-export default class Products {
+export default class Product {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -38,9 +40,9 @@ export default class Products {
   productName!: string;
 
   /////////참조를 위해 추가///////////
-  @ManyToOne(() => Users)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user!: Users;
+  user!: User;
   /////////참조를 위해 추가///////////
 
   @Column('text', { comment: 'description of product' })
@@ -58,10 +60,16 @@ export default class Products {
   @Column()
   imageId!: number;
 
+  @Column()
+  tradingPlace!: string;
+
+  @Column()
+  tradingTime!: string;
+
   /////////참조를 위해 추가///////////
-  @ManyToOne(() => Departments)
+  @ManyToOne(() => Department)
   @JoinColumn({ name: 'department_id' })
-  department!: Departments;
+  department!: Department;
   /////////참조를 위해 추가///////////
 
   // TypeORM이 적절한 타입을 자동으로 추론하므로 type 지정 불필요

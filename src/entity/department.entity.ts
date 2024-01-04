@@ -1,14 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 /*
-Table departments {
+Table department {
   id integer [primary key]
   department_name varchar
 
 }
 */
 @Entity()
-export default class Departments {
+export default class Department {
   @PrimaryGeneratedColumn()
   id!: number;
 

@@ -8,7 +8,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import Departments from './department.entity';
+import Department from './department.entity';
 
 /*
 
@@ -24,7 +24,7 @@ Table users {
 }
 */
 @Entity()
-export default class Users {
+export default class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -38,9 +38,9 @@ export default class Users {
   email!: string;
 
   /////////참조를 위해 추가///////////
-  @ManyToOne(() => Departments)
+  @ManyToOne(() => Department)
   @JoinColumn({ name: 'department_id' })
-  department!: Departments;
+  department!: Department;
   /////////참조를 위해 추가///////////
 
   // TypeORM이 적절한 타입을 자동으로 추론하므로 type 지정 불필요

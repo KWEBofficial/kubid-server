@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import Products from './products.entity';
+import Product from './products.entity';
 
 /*
 Table tags {
@@ -15,7 +15,7 @@ Table tags {
 }
   */
 @Entity()
-export default class Tags {
+export default class Tag {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -23,8 +23,8 @@ export default class Tags {
   tag!: string;
 
   /////////참조를 위해 추가///////////
-  @ManyToOne(() => Products)
+  @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
-  product!: Products;
+  product!: Product;
   /////////참조를 위해 추가///////////
 }
