@@ -1,15 +1,12 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import Department from './department.entity';
-
+import { BaseEntity } from './base.entity';
 /*
 
 Table users {
@@ -24,7 +21,7 @@ Table users {
 }
 */
 @Entity()
-export default class User {
+export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -42,16 +39,4 @@ export default class User {
   @JoinColumn({ name: 'department_id' })
   department!: Department;
   /////////참조를 위해 추가///////////
-
-  // TypeORM이 적절한 타입을 자동으로 추론하므로 type 지정 불필요
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  // NULLable == true 이므로, ? 사용
-  @UpdateDateColumn()
-  updatedAt?: Date;
-
-  // NULLable == true 이므로, ? 사용
-  @DeleteDateColumn()
-  deletedAt?: Date;
 }
