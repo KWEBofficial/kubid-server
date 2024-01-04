@@ -6,12 +6,12 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import Users from './user.entity';
-import Products from './products.entity';
+import User from './user.entity';
+import Product from './products.entity';
 
 /*
   
-Table biddings {
+Table bidding {
   id integer [primary key]
   user_id integer
   product_id integer
@@ -20,20 +20,20 @@ Table biddings {
 }
   */
 @Entity()
-export default class Biddings {
+export default class Bidding {
   @PrimaryGeneratedColumn()
   id!: number;
 
   /////////참조를 위해 추가///////////
-  @ManyToOne(() => Users)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user!: Users;
+  user!: User;
   /////////참조를 위해 추가///////////
 
   /////////참조를 위해 추가///////////
-  @ManyToOne(() => Products)
+  @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
-  product!: Products;
+  product!: Product;
   /////////참조를 위해 추가///////////
   @Column()
   price!: number;
