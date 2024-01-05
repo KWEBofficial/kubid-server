@@ -13,6 +13,14 @@ export default class UserService {
       throw new InternalServerError('유저 정보를 불러오는데 실패했습니다.');
     }
   }
+
+  static async getUserByEmail(email: string): Promise<User | null> {
+    try {
+      return await UserRepository.findOne({ where: { email } });
+    } catch (error) {
+      throw new InternalServerError('유저 정보를 불러오는데 실패했습니다.');
+    }
+  }
   /* 
   static async getUsersByAge(age: number): Promise<User[]> {
     try {
