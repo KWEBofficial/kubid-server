@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { validatePassword, hashPassword } from './controller';
+import { register } from './controller';
 
 const authRouter = Router();
 
-authRouter.post('/register', validatePassword, hashPassword);
+authRouter.post('/register', register);
 
 export default authRouter;
