@@ -7,8 +7,7 @@ import CreateUserDTO from '../../type/user/create.input';
 
 export const signup: RequestHandler = async (req, res, next) => {
   try {
-    const { password, email, departmentId: departmentIdAsString } = req.body;
-    const departmentId = Number(departmentIdAsString);
+    const { password, email, departmentId }: CreateUserDTO = req.body;
 
     if (!password) throw new BadRequestError('비밀번호를 입력하지 않았습니다.');
     const hashedPassword: string = await generateHashedPassword(password);
