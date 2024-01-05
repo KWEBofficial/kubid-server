@@ -17,6 +17,19 @@ export const getUserById: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserByEmail: RequestHandler = async (req, res, next) => {
+  try {
+    const email = String(req.query.email);
+
+    const user = await UserService.getUserByEmail(email);
+    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
 /*
 export const getUsersByAge: RequestHandler = async (req, res, next) => {
   try {

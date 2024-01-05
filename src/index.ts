@@ -5,6 +5,8 @@ import AppDataSource from './config/dataSource';
 import './config/env';
 import router from './controller/router';
 import errorHandler from './util/errorHandler';
+import passport from 'passport';
+import { passportConfig } from './passport/index';
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -17,5 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 app.use(errorHandler);
+
+// passport.js 관련 설정
+app.use(passport.initialize());
+passportConfig();
 
 app.listen(PORT, () => console.log(`Server is started!`));
