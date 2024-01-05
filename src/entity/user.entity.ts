@@ -1,7 +1,5 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -25,7 +23,7 @@ Table users {
 }
 */
 @Entity()
-export default class User {
+export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
