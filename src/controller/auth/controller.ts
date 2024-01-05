@@ -3,6 +3,7 @@ import { BadRequestError } from '../../util/customErrors';
 import { generateHashedPassword } from '../../util/authentication';
 import UserService from '../../service/user.service';
 import DepartmentService from '../../service/department.service';
+import CreateUserDTO from '../../type/user/create.input';
 
 export const register: RequestHandler = async (req, res, next) => {
   try {
@@ -16,7 +17,6 @@ export const register: RequestHandler = async (req, res, next) => {
     const user = await UserService.getUserByEmail(email);
     if (user) throw new BadRequestError('이미 존재하는 이메일입니다.');
 
-    // TODO: 학과 유효성 검사
     const departmentId: number = Number(req.body.departmentId);
     if (!departmentId)
       throw new BadRequestError(
@@ -25,11 +25,24 @@ export const register: RequestHandler = async (req, res, next) => {
     const department = await DepartmentService.getDepartmentById(departmentId);
     if (!department) throw new BadRequestError('존재하지 않는 학과입니다.');
 
-    res.send('good');
+    // DB에 등록
+    const createUserDTO: CreateUserDTO = {
+      email: req.body.email,
+      nickname: req.body.nickname,
+      password: hashedPassword,
+      departmentId,
+    };
+    const saveUserResult = await UserService.saveUser(createUserDTO);
 
-    // TODO: DB에 등록
-
-    // TODO: PR
+    // API 명세를 따르기 위해 saveUserResult를 바로 돌려주지 않고 userResponse를 선언
+    const userResponse = {
+      id: saveUserResult.id,
+      email: saveUserResult.email,
+      nickname: saveUserResult.nickname,
+      departmentId,
+      createdAt: saveUserResult.createdAt,
+    };
+    res.status(201).json(userResponse);
   } catch (error) {
     next(error);
   }
