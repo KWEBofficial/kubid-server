@@ -1,40 +1,43 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
-// 예시 entity입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다. !!!
+import Department from './department.entity';
+import { BaseEntity } from './base.entity';
+/*
 
+Table users {
+  id integer [primary key]
+  password varchar
+  nickname varchar
+  email varchar
+  department_id varchar
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+*/
 @Entity()
-export default class User {
+export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  firstName!: string;
+  password!: string;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: false,
-    default: '김',
-    comment: '사용자의 성',
-  })
-  lastName!: string;
+  @Column()
+  nickname!: string;
 
-  @Column({ nullable: true })
-  age?: number;
+  @Column()
+  email!: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', nullable: true })
-  updatedAt?: Date;
-
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deletedAt?: Date;
+  /////////참조를 위해 추가///////////
+  @ManyToOne(() => Department)
+  @JoinColumn({ name: 'department_id' })
+  department!: Department;
+  /////////참조를 위해 추가///////////
 }
