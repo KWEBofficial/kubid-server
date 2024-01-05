@@ -5,7 +5,7 @@ import UserService from '../../service/user.service';
 import DepartmentService from '../../service/department.service';
 import CreateUserDTO from '../../type/user/create.input';
 
-export const register: RequestHandler = async (req, res, next) => {
+export const signup: RequestHandler = async (req, res, next) => {
   try {
     const password: string = req.body.password;
     if (!password) throw new BadRequestError('비밀번호를 입력하지 않았습니다.');
