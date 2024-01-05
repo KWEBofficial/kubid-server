@@ -1,9 +1,6 @@
 import User from '../entity/user.entity';
 import UserRepository from '../repository/user.repository';
-//import CreateUserInput from '../type/user/create.input';
 import { InternalServerError } from '../util/customErrors';
-
-// 예시 service입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
 
 export default class UserService {
   static async getUserById(id: number): Promise<User | null> {
