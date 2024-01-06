@@ -12,11 +12,17 @@ export const signIn: RequestHandler = async (req, res, next) => {
     // local로 등록한 인증과정 실행
     passport.authenticate(
       'local',
-      (passportError: Error, user: User, info: { reason: string }) => {
+      (passportError: Error, user: User, info: any) => {
         console.log('CHECK2');
         // 인증이 실패했거나 유저 데이터가 없다면 에러 발생
         if (passportError || !user) {
-          res.status(400).json({ message: info.reason });
+          // NOTE: 에러 메시지가 info.message 또는(XOR) info.reason에서 오기 때문에 errorMessage로 취합
+          const errorMessage =
+            (info.message ? info.message : '') +
+            (info.reason ? info.reason : '');
+          res
+            .status(400)
+            .json({ name: 'BadRequestError', message: errorMessage });
           return;
         }
         console.log('CHECK3');
