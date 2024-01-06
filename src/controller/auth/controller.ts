@@ -8,7 +8,7 @@ import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import User from '../../entity/user.entity';
 
-export const signup: RequestHandler = async (req, res, next) => {
+export const signUp: RequestHandler = async (req, res, next) => {
   try {
     const { password, email, departmentId: departmentIdAsString } = req.body;
     const departmentId = Number(departmentIdAsString);
@@ -52,28 +52,35 @@ export const signup: RequestHandler = async (req, res, next) => {
 
 export const signIn: RequestHandler = async (req, res, next) => {
   try {
-    console.log('CHECK1');
     // local로 등록한 인증과정 실행
     passport.authenticate(
       'local',
       (passportError: Error, user: User, info: any) => {
-        console.log('CHECK2');
         // 인증이 실패했거나 유저 데이터가 없다면 에러 발생
-        if (passportError || !user) {
-          // NOTE: 에러 메시지가 info.message 또는(XOR) info.reason에서 오기 때문에 errorMessage로 취합
-          const errorMessage =
-            (info.message ? info.message : '') +
-            (info.reason ? info.reason : '');
-          res
-            .status(400)
-            .json({ name: 'BadRequestError', message: errorMessage });
+        if (passportError) {
+          // 일반적인 authentication error인 경우
+          res.status(400).json({
+            name: 'AuthenticationError',
+            message: 'Authentication failed.',
+          });
           return;
         }
-        console.log('CHECK3');
+
+        if (!user) {
+          // user의 정보가 DB에 없는 경우
+          res.status(401).json({
+            name: 'UnauthorizedError',
+            message: 'Unauthorized - Invalid credentials.',
+          });
+          return;
+        }
         // user 데이터를 통해 로그인 진행
         req.login(user, { session: false }, (loginError) => {
           if (loginError) {
-            res.send(loginError);
+            res.status(500).json({
+              name: 'InternalError',
+              message: 'Internal Server Error',
+            });
             return;
           }
           // 클라이언트에게 JWT 생성 후 반환
@@ -87,11 +94,13 @@ export const signIn: RequestHandler = async (req, res, next) => {
     )(req, res);
   } catch (err) {
     console.error(err);
-    console.log('AHHH');
-    next(err);
+    res
+      .status(500)
+      .json({ name: 'InternalError', message: 'Internal Server Error' });
   }
 };
 
 module.exports = {
+  signUp,
   signIn,
 };

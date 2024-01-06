@@ -11,7 +11,6 @@ const passportConfig = {
 
 const passportVerify = async (email: string, password: string, done: any) => {
   try {
-    console.log('passportVerify');
     // 유저 아이디로 일치하는 유저 데이터 검색
     const user = await UserService.getUserByEmail(email);
     // 검색된 유저 데이터가 없다면 에러 표시
