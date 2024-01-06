@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/sjn0910/express-ts-typeorm-boilerplate#readme",
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
