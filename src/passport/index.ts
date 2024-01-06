@@ -4,9 +4,12 @@ import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
 import UserService from '../service/user.service'; // User entity 사용 가능하도록 import
 import { verifyPassword } from '../util/authentication';
 
-const passportConfig = { usernameField: 'email', passwordField: 'password' };
+const passportConfig = {
+  usernameField: 'email',
+  passwordField: 'password',
+};
 
-const passportVerify = async (email: string, password: string, done) => {
+const passportVerify = async (email: string, password: string, done: any) => {
   try {
     console.log('passportVerify');
     // 유저 아이디로 일치하는 유저 데이터 검색
@@ -36,7 +39,7 @@ const JWTConfig = {
   secretOrKey: 'jwt-secret-key',
 };
 
-const JWTVerify = async (jwtPayload, done) => {
+const JWTVerify = async (jwtPayload: any, done: any) => {
   try {
     console.log('JWTVerify');
     // payload의 id값으로 유저의 데이터 조회
@@ -54,7 +57,7 @@ const JWTVerify = async (jwtPayload, done) => {
   }
 };
 
-module.exports = () => {
+export const passportConfigFunc = () => {
   passport.use('local', new LocalStrategy(passportConfig, passportVerify));
   passport.use('jwt', new JWTStrategy(JWTConfig, JWTVerify));
 };
