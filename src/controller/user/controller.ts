@@ -1,58 +1,42 @@
 import { RequestHandler } from 'express';
+import { BadRequestError, InternalServerError } from '../../util/customErrors';
+import UpdateUserDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
+import User from '../../entity/user.entity';
+import { generateHashedPassword } from '../../util/authentication';
 //import CreateUserInput from '../../type/user/create.input';
-import { BadRequestError } from '../../util/customErrors';
 
-// 예시 controller입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
-
-export const getUserById: RequestHandler = async (req, res, next) => {
+export const updateUser: RequestHandler = async (req, res, next) => {
   try {
-    const id = Number(req.query.id);
+    if (!req.user)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+    const { id } = req.user as any;
+    const { password, nickname } = req.body as UpdateUserDTO;
+    if (!password) throw new BadRequestError('비밀번호를 입력해 주세요.');
+    if (!nickname) throw new BadRequestError('닉네임을 입력해 주세요.');
 
-    const user = await UserService.getUserById(id);
-    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
+    const hashedPassword: string = await generateHashedPassword(password);
+    const updateUserDTO: UpdateUserDTO = { password: hashedPassword, nickname };
 
-    res.json(user);
+    const userAffected = await UserService.updateUser(id, updateUserDTO);
+    if (!userAffected)
+      throw new InternalServerError('유저 정보를 수정하지 못했어요.');
+
+    const { email, department, createdAt } = (await UserService.getUserById(
+      id,
+    )) as User;
+    const userResponse = {
+      id,
+      email,
+      nickname,
+      departmentId: department.id,
+      createdAt,
+    };
+    res.status(200).json(userResponse);
+    return;
   } catch (error) {
     next(error);
   }
 };
-
-export const getUserByEmail: RequestHandler = async (req, res, next) => {
-  try {
-    const email = String(req.query.email);
-
-    const user = await UserService.getUserByEmail(email);
-    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
-
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-};
-/*
-export const getUsersByAge: RequestHandler = async (req, res, next) => {
-  try {
-    const age = Number(req.params.age);
-
-    const users = await UserService.getUsersByAge(age);
-
-    res.json(users);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const createUser: RequestHandler = async (req, res, next) => {
-  try {
-    const { firstName, lastName, age } = req.body as CreateUserInput;
-    const createUserInput: CreateUserInput = { firstName, lastName, age };
-
-    const user = await UserService.saveUser(createUserInput);
-
-    res.status(201).json(user.id);
-  } catch (error) {
-    next(error);
-  }
-};
-*/
