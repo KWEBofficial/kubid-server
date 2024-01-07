@@ -1,4 +1,6 @@
 {
+  "ts-node": { "files": true },
+  "files": ["./types/index.d.ts"],
   "compilerOptions": {
     /* Language and Environment */
     "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
@@ -24,6 +26,6 @@
 
     "resolveJsonModule": true /* Enables TypeScript to import JSON files as modules */
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types/index.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

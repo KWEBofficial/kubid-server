@@ -1,7 +1,24 @@
 import { RequestHandler } from 'express';
 import UserService from '../../service/user.service';
-//import CreateUserInput from '../../type/user/create.input';
 import { BadRequestError } from '../../util/customErrors';
+
+export const getUser: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new BadRequestError('temp');
+    const user = await UserService.getUserById(userId);
+    if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
+    res.json({
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      departmentId: user.department,
+      createdAt: user.createdAt,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // 예시 controller입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
 
@@ -17,7 +34,7 @@ export const getUserById: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-
+/*
 export const getUserByEmail: RequestHandler = async (req, res, next) => {
   try {
     const email = String(req.query.email);
@@ -30,7 +47,7 @@ export const getUserByEmail: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-/*
+
 export const getUsersByAge: RequestHandler = async (req, res, next) => {
   try {
     const age = Number(req.params.age);

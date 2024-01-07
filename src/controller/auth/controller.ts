@@ -102,11 +102,9 @@ export const signIn: RequestHandler = async (req, res) => {
           return;
         }
         // 클라이언트에게 JWT 생성 후 반환
-        const token = jwt.sign(
-          { id: user.id, nickname: user.nickname, password: user.password },
-          process.env.JWT_SECRET_KEY,
-          { expiresIn: '1h' },
-        );
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+          expiresIn: '1h',
+        });
         res.json({ token });
       });
     })(req, res);
