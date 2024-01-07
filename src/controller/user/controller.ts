@@ -1,58 +1,39 @@
 import { RequestHandler } from 'express';
-import UserService from '../../service/user.service';
+import { InternalServerError } from '../../util/customErrors';
+import ProductService from '../../service/product.service';
+import BiddingService from '../../service/bidding.service';
 //import CreateUserInput from '../../type/user/create.input';
-import { BadRequestError } from '../../util/customErrors';
 
-// 예시 controller입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
-
-export const getUserById: RequestHandler = async (req, res, next) => {
+export const getSellingProducts: RequestHandler = async (req, res, next) => {
   try {
-    const id = Number(req.query.id);
+    if (!req.user)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { id } = req.user as any;
+    const userResponse = [];
 
-    const user = await UserService.getUserById(id);
-    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
-
-    res.json(user);
+    const products = await ProductService.getSellingProductsByUserId(id);
+    for (const product of products) {
+      const biddings = await BiddingService.getBiddingsByProductId(product.id);
+      const prices = biddings.map((bidding) => bidding.price);
+      const maxPrice = Math.max(...prices);
+      userResponse.push({
+        id: product.id,
+        product_name: product.productName,
+        user_id: product.user.id,
+        status: product.status,
+        currentHighestPrice: maxPrice,
+        upperBound: product.upperBound,
+        imageId: product.imageId,
+        departmentId: product.department.id,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      });
+    }
+    res.status(200).json(userResponse);
   } catch (error) {
     next(error);
   }
 };
-
-export const getUserByEmail: RequestHandler = async (req, res, next) => {
-  try {
-    const email = String(req.query.email);
-
-    const user = await UserService.getUserByEmail(email);
-    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
-
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-};
-/*
-export const getUsersByAge: RequestHandler = async (req, res, next) => {
-  try {
-    const age = Number(req.params.age);
-
-    const users = await UserService.getUsersByAge(age);
-
-    res.json(users);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const createUser: RequestHandler = async (req, res, next) => {
-  try {
-    const { firstName, lastName, age } = req.body as CreateUserInput;
-    const createUserInput: CreateUserInput = { firstName, lastName, age };
-
-    const user = await UserService.saveUser(createUserInput);
-
-    res.status(201).json(user.id);
-  } catch (error) {
-    next(error);
-  }
-};
-*/
