@@ -93,7 +93,7 @@ export const signIn: RequestHandler = async (req, res) => {
           });
           return;
         }
-
+        
         if (!user) {
           // user의 정보가 DB에 없는 경우
           res.status(400).json({
@@ -122,6 +122,7 @@ export const signIn: RequestHandler = async (req, res) => {
         });
       },
     )(req, res);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({

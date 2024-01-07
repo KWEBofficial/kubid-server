@@ -1,8 +1,12 @@
 import { Router } from 'express';
+import { decodeToken } from '../auth/middleware';
+import { getUser } from './controller';
 //import { getUserByEmail } from './controller';
 //import { createUser, getUserById, getUsersByAge } from './controller';
 
 const userRouter = Router();
+
+userRouter.get('/current-user', decodeToken, getUser); // 현재 로그인 유저 정보
 
 /*
 userRouter.get('/', getUserByEmail); // query를 사용하여 email에 맞는 user 정보를 가져오는 api ex) GET http://localhost:3000/user?email="name@example.com"
