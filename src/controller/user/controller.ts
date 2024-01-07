@@ -12,6 +12,7 @@ export const updateUser: RequestHandler = async (req, res, next) => {
       throw new InternalServerError(
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { id } = req.user as any;
     const { password, nickname } = req.body as UpdateUserDTO;
     if (!password) throw new BadRequestError('비밀번호를 입력해 주세요.');
