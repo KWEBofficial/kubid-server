@@ -11,6 +11,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '../../../.env.dev' });
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
       CLIENT_URL: string;

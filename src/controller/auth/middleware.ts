@@ -1,10 +1,5 @@
-export const handleAuthRequest = async (req, res, next) => {
-  try {
-    res.json({ result: true });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};
+import passport from 'passport';
 
-module.exports = { handleAuthRequest };
+export const authRequired = passport.authenticate('jwt', { session: false });
+
+module.exports = { authRequired };
