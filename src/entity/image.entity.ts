@@ -5,6 +5,6 @@ export default class Image {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
-  url!: number;
+  @Column({ nullable: true })
+  url?: string;
 }
