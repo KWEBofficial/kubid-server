@@ -35,3 +35,26 @@ export const getAllProducts: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const bidProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new BadRequestError('로그인이 필요합니다.');
+
+    const productId = Number(req.params.id);
+    if (!productId) throw new BadRequestError('상품 아이디를 확인해주세요.');
+
+    const price = Number(req.body.biddingPrice);
+    if (!price) throw new BadRequestError('입찰 가격을 확인해주세요.');
+
+    const bidding = await BiddingService.bidProductByIds(
+      userId,
+      productId,
+      price,
+    );
+
+    res.status(201).json({ bidding });
+  } catch (error) {
+    next();
+  }
+};

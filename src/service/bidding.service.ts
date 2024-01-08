@@ -31,4 +31,23 @@ export default class BiddingService {
       throw new InternalServerError('상품의 입찰 내역을 불러오지 못했어요.');
     }
   }
+
+  static async bidProductByIds(
+    userId: number,
+    productId: number,
+    price: number,
+  ): Promise<Bidding> {
+    try {
+      const bidding = BiddingRepository.create({
+        user: { id: userId },
+        product: { id: productId },
+        price: price,
+      });
+      const savedBidding = await BiddingRepository.save(bidding);
+
+      return savedBidding;
+    } catch (error) {
+      throw new InternalServerError('상품에 입찰하지 못했어요.');
+    }
+  }
 }
