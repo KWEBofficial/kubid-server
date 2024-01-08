@@ -1,6 +1,6 @@
 import User from '../entity/user.entity';
 import UserRepository from '../repository/user.repository';
-import CreateUserDTO from '../type/user/create.input';
+import { CreateUserDTO } from '../type/user/create.input';
 import { InternalServerError } from '../util/customErrors';
 import DepartmentService from './department.service';
 
