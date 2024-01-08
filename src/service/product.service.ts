@@ -28,8 +28,6 @@ export default class ProductService {
   ): Promise<any[]> {
     try {
       const skip = (page - 1) * limit;
-      console.log(skip, limit);
-
       const rawProducts = await ProductRepository.createQueryBuilder('product')
         .select([
           'product.id as id',
