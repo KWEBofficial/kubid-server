@@ -75,14 +75,17 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
       const biddings = await BiddingService.getBiddingsByProductId(product.id);
       const prices = biddings.map((bidding) => bidding.price);
       const maxPrice = Math.max(...prices);
+      const tags = await 
       userResponse.push({
         id: product.id,
         product_name: product.productName,
+        upper_bound: product.upperBound,
+        currentHighestPrice: maxPrice,
+        imageId: product.imageId,
+
         user_id: product.user.id,
         status: product.status,
-        currentHighestPrice: maxPrice,
-        upperBound: product.upperBound,
-        imageId: product.imageId,
+        
         departmentId: product.department.id,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
