@@ -50,4 +50,18 @@ export default class BiddingService {
       throw new InternalServerError('상품에 입찰하지 못했어요.');
     }
   }
+
+  static async giveUpBiddingByIds(
+    userId: number,
+    productId: number,
+  ): Promise<void> {
+    try {
+      await BiddingRepository.softDelete({
+        user: { id: userId },
+        product: { id: productId },
+      });
+    } catch (error) {
+      throw new InternalServerError('상품의 입찰을 포기하지 못했어요.');
+    }
+  }
 }
