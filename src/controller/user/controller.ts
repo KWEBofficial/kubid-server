@@ -2,19 +2,37 @@ import { RequestHandler } from 'express';
 import { InternalServerError } from '../../util/customErrors';
 import ProductService from '../../service/product.service';
 import BiddingService from '../../service/bidding.service';
-//import CreateUserInput from '../../type/user/create.input';
+import UserService from '../../service/user.service';
+import { BadRequestError } from '../../util/customErrors';
+
+export const getUser: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new BadRequestError('temp');
+    const user = await UserService.getUserById(userId);
+    if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
+    res.json({
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      departmentId: user.department,
+      createdAt: user.createdAt,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getSellingProducts: RequestHandler = async (req, res, next) => {
   try {
-    if (!req.user)
+    const userId = req.userId;
+    if (!userId)
       throw new InternalServerError(
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { id } = req.user as any;
-    const userResponse = [];
 
-    const products = await ProductService.getSellingProductsByUserId(id);
+    const userResponse = [];
+    const products = await ProductService.getSellingProductsByUserId(userId);
     for (const product of products) {
       const biddings = await BiddingService.getBiddingsByProductId(product.id);
       const prices = biddings.map((bidding) => bidding.price);
