@@ -72,7 +72,6 @@ export const signUp: RequestHandler = async (req, res, next) => {
 export const signIn: RequestHandler = async (req, res) => {
   try {
     // local로 등록한 인증과정 실행
-    console.log('check1');
     passport.authenticate(
       'local',
       (passportError: Error, user: User, info: any) => {
@@ -93,7 +92,7 @@ export const signIn: RequestHandler = async (req, res) => {
           });
           return;
         }
-        
+
         if (!user) {
           // user의 정보가 DB에 없는 경우
           res.status(400).json({
@@ -122,7 +121,6 @@ export const signIn: RequestHandler = async (req, res) => {
         });
       },
     )(req, res);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({

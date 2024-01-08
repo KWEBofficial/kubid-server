@@ -20,4 +20,12 @@ export default class ProductService {
       );
     }
   }
+
+  static async getProductByProductId(id: number): Promise<Product | null> {
+    try {
+      return await ProductRepository.findOne({ where: { id } });
+    } catch (error) {
+      throw new InternalServerError('해당 상품을 찾지 못했어요.');
+    }
+  }
 }
