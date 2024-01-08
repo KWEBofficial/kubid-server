@@ -21,6 +21,7 @@
     "url": "https://github.com/sjn0910/express-ts-typeorm-boilerplate/issues"
   },
   "homepage": "https://github.com/sjn0910/express-ts-typeorm-boilerplate#readme",
+  "types": "./src/type/index.d.ts",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
     "cors": "^2.8.5",
