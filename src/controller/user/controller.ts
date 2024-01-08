@@ -93,3 +93,38 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getBuyingProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const { page: pageAsString, pageSize: pageSizeAsString } = req.query;
+    const page = Number(pageAsString);
+    const pageSize = Number(pageSizeAsString);
+    if (!page || !pageSize)
+      throw new BadRequestError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const userResponse = [];
+    const products = await ProductService.getBuyingProductsByUserId(
+      userId,
+      page,
+      pageSize,
+    );
+    for (const product of products) {
+      const biddings = await BiddingService.getBiddingsByProductId(product.id);
+      const prices = biddings.map((bidding) => bidding.price);
+      const current_highest_price = Math.max(...prices);
+
+      userResponse.push({ ...product, current_highest_price });
+    }
+    res.status(200).json(userResponse);
+  } catch (error) {
+    next(error);
+  }
+};
