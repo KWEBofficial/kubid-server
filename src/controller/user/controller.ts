@@ -1,5 +1,7 @@
 import { RequestHandler } from 'express';
 import { BadRequestError, InternalServerError } from '../../util/customErrors';
+import ProductService from '../../service/product.service';
+import BiddingService from '../../service/bidding.service';
 import UpdateUserDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import User from '../../entity/user.entity';
@@ -30,6 +32,7 @@ export const updateUser: RequestHandler = async (req, res, next) => {
       throw new InternalServerError(
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
+
     const { password, nickname } = req.body as UpdateUserDTO;
     if (!password) throw new BadRequestError('비밀번호를 입력해 주세요.');
     if (!nickname) throw new BadRequestError('닉네임을 입력해 주세요.');
@@ -53,6 +56,39 @@ export const updateUser: RequestHandler = async (req, res, next) => {
     };
     res.status(200).json(userResponse);
     return;
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSellingProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const userResponse = [];
+    const products = await ProductService.getSellingProductsByUserId(userId);
+    for (const product of products) {
+      const biddings = await BiddingService.getBiddingsByProductId(product.id);
+      const prices = biddings.map((bidding) => bidding.price);
+      const maxPrice = Math.max(...prices);
+      userResponse.push({
+        id: product.id,
+        product_name: product.productName,
+        user_id: product.user.id,
+        status: product.status,
+        currentHighestPrice: maxPrice,
+        upperBound: product.upperBound,
+        imageId: product.imageId,
+        departmentId: product.department.id,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      });
+    }
+    res.status(200).json(userResponse);
   } catch (error) {
     next(error);
   }

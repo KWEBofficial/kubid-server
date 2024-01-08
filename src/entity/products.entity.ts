@@ -47,7 +47,7 @@ export default class Product extends BaseEntity {
   desc!: string;
 
   @Column()
-  status!: string;
+  status!: 'progress' | 'complete';
 
   @Column()
   lowerBound!: number;
