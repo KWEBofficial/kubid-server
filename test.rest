@@ -3,9 +3,9 @@ POST http://localhost:3000/auth/sign-up HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "hayeongpar@naver.com",
+    "email": "hayeongpark4@naver.com",
     "nickname": "TEST",
-    "password": "string",
+    "password": "12345",
     "departmentId": 1
 }
 
@@ -15,8 +15,9 @@ POST http://localhost:3000/auth/sign-in HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "hayeongpark@naver.com",
-    "password": "string"
+
+    "email": "hayeongpark4@naver.com",
+    "password": "12345"
 }
 
 
@@ -24,8 +25,6 @@ Content-Type: application/json
 GET http://localhost:3000/products HTTP/1.1
 Content-Type: application/json
 
-<<<<<<< HEAD
-=======
 
 ### 상품 등록 테스트
 POST http://localhost:3000/products HTTP/1.1
@@ -43,4 +42,12 @@ Content-Type: application/json
     "tradingTime": "2024-01-10T15:00:00", // 거래 시간
     "department_id": 1 // 가정: 부서 ID는 1번이라고 가정합니다.
 }
->>>>>>> bbfafb12889d041a16a396b498e41b466b32836d
+
+
+
+### 현재 사용자 정보 테스트
+
+GET http://localhost:3000/users/current-user HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcwNDYzMDAyNCwiZXhwIjoxNzA0NjMzNjI0fQ.A2gx-Sg2qONgh6rHGBOZYlvGmbl1mnfUtxDCrqPH7-A
+

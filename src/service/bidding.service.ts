@@ -1,7 +1,6 @@
+import Bidding from '../entity/bidding.entity';
 import BiddingRepository from '../repository/bidding.repository';
-
 import { InternalServerError } from '../util/customErrors';
-//import DepartmentService from './department.service';
 
 export default class BiddingService {
   static async getHighestPriceByProductId(productId: number): Promise<number> {
@@ -17,6 +16,19 @@ export default class BiddingService {
       return bid.highestPrice;
     } catch (error) {
       throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
+    }
+  }
+  static async getBiddingsByProductId(productId: number): Promise<Bidding[]> {
+    try {
+      return await BiddingRepository.find({
+        where: {
+          product: {
+            id: productId,
+          },
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError('상품의 입찰 내역을 불러오지 못했어요.');
     }
   }
 }

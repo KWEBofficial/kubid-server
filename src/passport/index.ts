@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
 import UserService from '../service/user.service'; // User entity 사용 가능하도록 import
+import { UnauthorizedError } from '../util/customErrors';
 import { verifyPassword } from '../util/authentication';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '../../.env.dev' });
@@ -17,10 +18,7 @@ const passportVerify = async (email: string, password: string, done: any) => {
     const user = await UserService.getUserByEmail(email);
     // 검색된 유저 데이터가 없다면 에러 표시
     if (!user) {
-      done(null, false, {
-        status: 401,
-        message: '존재하지 않는 사용자 입니다.',
-      });
+      done(null, false, new UnauthorizedError('등록되지 않은 이메일이에요.'));
       return;
     }
     // 검색된 유저 데이터가 있다면 유저 해시된 비밀번호 비교
@@ -29,12 +27,10 @@ const passportVerify = async (email: string, password: string, done: any) => {
     if (compareResult) {
       done(null, user);
       return;
+    } else {
+      // 비밀번호가 다를 경우 에러 표시
+      done(null, false, new UnauthorizedError('비밀번호가 틀렸어요.'));
     }
-    // 비밀번호가 다를 경우 에러 표시
-    done(null, false, {
-      status: 401,
-      reason: '올바르지 않은 비밀번호 입니다.',
-    });
   } catch (error) {
     console.error(error);
     done(error);
