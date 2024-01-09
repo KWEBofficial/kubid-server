@@ -22,6 +22,24 @@ export default class ProductService {
       take: limit,
     });
   }
+
+  static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
+    try {
+      return await ProductRepository.find({
+        where: {
+          user: {
+            id: userId,
+          },
+          status: 'progress',
+        },
+        relations: ['user', 'department'],
+      });
+    } catch (error) {
+      throw new InternalServerError(
+        '현재 판매 중인 상품 목록을 불러오지 못했어요.',
+      );
+    }
+  }
 }
 
 /*
@@ -38,3 +56,5 @@ data: {
     department_id: string;
   }
 */
+
+export default class ProductService {}

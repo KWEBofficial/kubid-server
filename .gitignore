@@ -6,3 +6,6 @@ dist
 
 # dotenv environment variable files
 *.env*
+
+# rest client
+*.rest

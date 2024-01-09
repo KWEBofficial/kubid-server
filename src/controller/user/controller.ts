@@ -1,58 +1,167 @@
 import { RequestHandler } from 'express';
+import { BadRequestError, InternalServerError } from '../../util/customErrors';
+import ProductService from '../../service/product.service';
+import BiddingService from '../../service/bidding.service';
+import UpdateUserDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
-//import CreateUserInput from '../../type/user/create.input';
-import { BadRequestError } from '../../util/customErrors';
+import { generateHashedPassword } from '../../util/authentication';
 
-// 예시 controller입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
+export const getUser: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.auto = false;
+  #swagger.tags = ['User'];
+  #swagger.summary = "현재 로그인 유저 정보";
+  #swagger.parameters['Authorization'] = {
+    in: 'header',                                     
+    required: true,                     
+    type: "string",                       
+  };
+  #swagger.responses[201] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/CurrentUserResDTO"
+        }
+      }           
+    }
+  };
+  #swagger.security = [{
+            "bearerAuth": []
+  }];
+  */
 
-export const getUserById: RequestHandler = async (req, res, next) => {
   try {
-    const id = Number(req.query.id);
-
-    const user = await UserService.getUserById(id);
-    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
-
-    res.json(user);
+    const userId = req.userId;
+    if (!userId) throw new BadRequestError('temp');
+    const user = await UserService.getUserById(userId);
+    if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
+    res.json({
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      departmentId: user.department,
+      createdAt: user.createdAt,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-export const getUserByEmail: RequestHandler = async (req, res, next) => {
+export const updateUser: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.tags = ['User'];
+  #swagger.summary = "현재 로그인 유저 정보 수정";
+  #swagger.parameters['Authorization'] = {
+    in: 'header',                                     
+    required: true,                     
+    type: "string",                       
+  };
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+            $ref: "#/components/schemas/CurrentUserUpdateReqDTO"
+        }
+      }
+    }
+  };
+  #swagger.responses[200] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/CurrentUserUpdateResDTO"
+        }
+      }           
+    }
+  };
+  #swagger.security = [{
+            "bearerAuth": []
+  }];
+  */
   try {
-    const email = String(req.query.email);
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
 
-    const user = await UserService.getUserByEmail(email);
-    if (!user) throw new BadRequestError('해당하는 유저가 없습니다.');
+    const { password, nickname } = req.body as UpdateUserDTO;
+    if (!password) throw new BadRequestError('비밀번호를 입력해 주세요.');
+    if (!nickname) throw new BadRequestError('닉네임을 입력해 주세요.');
 
-    res.json(user);
+    const hashedPassword = await generateHashedPassword(password);
+    const updateUserDTO: UpdateUserDTO = { password: hashedPassword, nickname };
+
+    const { email, department, createdAt } = await UserService.updateUser(
+      userId,
+      updateUserDTO,
+    );
+
+    const userResponse = {
+      userId,
+      email,
+      nickname,
+      departmentId: department.id,
+      createdAt,
+    };
+    res.status(200).json(userResponse);
+    return;
   } catch (error) {
     next(error);
   }
 };
-/*
-export const getUsersByAge: RequestHandler = async (req, res, next) => {
+
+export const getSellingProducts: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.tags = ['User'];
+  #swagger.summary = "현재 판매 중인 상품 목록";
+  #swagger.parameters['Authorization'] = {
+    in: 'header',                                     
+    required: false,                     
+    type: "string",                       
+  };
+  #swagger.responses[200] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/CurrentProductSellResDTO"
+        }
+      }           
+    }
+  };
+  #swagger.security = [{
+            "bearerAuth": []
+  }];
+  */
   try {
-    const age = Number(req.params.age);
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
 
-    const users = await UserService.getUsersByAge(age);
-
-    res.json(users);
+    const userResponse = [];
+    const products = await ProductService.getSellingProductsByUserId(userId);
+    for (const product of products) {
+      const biddings = await BiddingService.getBiddingsByProductId(product.id);
+      const prices = biddings.map((bidding) => bidding.price);
+      const maxPrice = Math.max(...prices);
+      userResponse.push({
+        id: product.id,
+        product_name: product.productName,
+        user_id: product.user.id,
+        status: product.status,
+        currentHighestPrice: maxPrice,
+        upperBound: product.upperBound,
+        imageId: product.imageId,
+        departmentId: product.department.id,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      });
+    }
+    res.status(200).json(userResponse);
   } catch (error) {
     next(error);
   }
 };
-
-export const createUser: RequestHandler = async (req, res, next) => {
-  try {
-    const { firstName, lastName, age } = req.body as CreateUserInput;
-    const createUserInput: CreateUserInput = { firstName, lastName, age };
-
-    const user = await UserService.saveUser(createUserInput);
-
-    res.status(201).json(user.id);
-  } catch (error) {
-    next(error);
-  }
-};
-*/
