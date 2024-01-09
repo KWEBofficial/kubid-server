@@ -2,13 +2,13 @@ import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
 
 import { InternalServerError } from '../util/customErrors';
-//import DepartmentService from './department.service';
-
 export default class ProductService {
   //모든 상품 찾기
   static async getAllProducts(): Promise<Product[]> {
     try {
-      return await ProductRepository.find({});
+      return await ProductRepository.find({
+        relations: ['user', 'department'],
+      });
     } catch (error) {
       throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
     }
@@ -23,3 +23,21 @@ export default class ProductService {
     });
   }
 }
+<<<<<<< HEAD
+=======
+
+/*
+data: {
+    productName: string;
+    userId: number;
+    desc: string;
+    status: Status;
+    lowerBound: number;
+    upperBound: number;
+    imageId: number;
+    tradingPlace: string;
+    tradingTime: string;
+    department_id: string;
+  }
+*/
+>>>>>>> bbfafb12889d041a16a396b498e41b466b32836d

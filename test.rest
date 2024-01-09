@@ -24,3 +24,23 @@ Content-Type: application/json
 GET http://localhost:3000/products HTTP/1.1
 Content-Type: application/json
 
+<<<<<<< HEAD
+=======
+
+### 상품 등록 테스트
+POST http://localhost:3000/products HTTP/1.1
+Content-Type: application/json
+
+{
+    "productName": "테스트 상품",
+    "userId": 1, // 가정: 사용자 ID는 1번이라고 가정합니다.
+    "desc": "이것은 테스트 상품의 설명입니다.",
+    "status": "progress", // progress, complete
+    "lowerBound": 1000, // 최소 가격
+    "upperBound": 5000, // 최대 가격
+    "imageId": 1, // 가정: 이미지 ID는 1번이라고 가정합니다.
+    "tradingPlace": "서울시 강남구",
+    "tradingTime": "2024-01-10T15:00:00", // 거래 시간
+    "department_id": 1 // 가정: 부서 ID는 1번이라고 가정합니다.
+}
+>>>>>>> bbfafb12889d041a16a396b498e41b466b32836d
