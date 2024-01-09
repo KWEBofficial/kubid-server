@@ -3,11 +3,11 @@ import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import { generateHashedPassword } from '../../util/authentication';
 import UserService from '../../service/user.service';
 import DepartmentService from '../../service/department.service';
-import CreateUserDTO from '../../type/user/create.input';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import User from '../../entity/user.entity';
 import * as dotenv from 'dotenv';
+import CreateUserDTO from '../../type/user/create.input';
 dotenv.config({ path: '../../../.env.dev' });
 
 declare global {
