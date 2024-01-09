@@ -49,8 +49,8 @@ export default class UserService {
     id: number,
     updateUserDTO: UpdateUserDTO,
   ): Promise<User> {
-    const UpdateUserDAO = updateUserDTO;
-    const updateResult = await UserRepository.update(id, UpdateUserDAO);
+    const updateUserDAO = updateUserDTO;
+    const updateResult = await UserRepository.update(id, updateUserDAO);
     if (!updateResult.affected)
       throw new InternalServerError('유저 정보를 수정하지 못했어요.');
 
