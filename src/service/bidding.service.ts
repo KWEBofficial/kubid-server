@@ -1,19 +1,17 @@
-import Bidding from '../entity/bidding.entity';
 import BiddingRepository from '../repository/bidding.repository';
 import { InternalServerError } from '../util/customErrors';
 
 export default class BiddingService {
-  static async getBiddingsByProductId(productId: number): Promise<Bidding[]> {
+  static async getHighestPriceByProductId(productId: number): Promise<number> {
     try {
-      return await BiddingRepository.find({
-        where: {
-          product: {
-            id: productId,
-          },
-        },
-      });
+      const bid = await BiddingRepository.createQueryBuilder('bidding')
+        .select('MAX(bidding.price)', 'highestPrice')
+        .where('bidding.product_id = :productId', { productId })
+        .getRawOne();
+
+      return bid.highestPrice;
     } catch (error) {
-      throw new InternalServerError('상품의 입찰 내역을 불러오지 못했어요.');
+      throw new InternalServerError('상품 최고 입찰가를 불러오지 못했어요.');
     }
   }
 }

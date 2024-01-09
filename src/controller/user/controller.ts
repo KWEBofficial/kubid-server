@@ -72,9 +72,9 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
     const userResponse = [];
     const products = await ProductService.getSellingProductsByUserId(userId);
     for (const product of products) {
-      const biddings = await BiddingService.getBiddingsByProductId(product.id);
-      const prices = biddings.map((bidding) => bidding.price);
-      const maxPrice = Math.max(...prices);
+      const maxPrice = await BiddingService.getHighestPriceByProductId(
+        product.id,
+      );
       userResponse.push({
         id: product.id,
         product_name: product.productName,
