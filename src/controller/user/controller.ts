@@ -6,6 +6,7 @@ import UpdateUserDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import User from '../../entity/user.entity';
 import { generateHashedPassword } from '../../util/authentication';
+import errorHandler from '../../util/errorHandler';
 
 export const getUser: RequestHandler = async (req, res, next) => {
   try {
@@ -90,6 +91,6 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
     }
     res.status(200).json(userResponse);
   } catch (error) {
-    next(error);
+    errorHandler(error, req, res, next);
   }
 };
