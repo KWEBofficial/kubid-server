@@ -48,13 +48,18 @@ export default class UserService {
   static async updateUser(
     id: number,
     updateUserDTO: UpdateUserDTO,
-  ): Promise<number | undefined> {
-    try {
-      const UpdateUserDAO = updateUserDTO;
-      const updateResult = await UserRepository.update(id, UpdateUserDAO);
-      return updateResult.affected; // 업데이트된 엔티티의 수
-    } catch (error) {
+  ): Promise<User> {
+    const UpdateUserDAO = updateUserDTO;
+    const updateResult = await UserRepository.update(id, UpdateUserDAO);
+    if (!updateResult.affected)
       throw new InternalServerError('유저 정보를 수정하지 못했어요.');
-    }
+
+    const user = await UserService.getUserById(id);
+    if (!user)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해 주세요.',
+      );
+
+    return user;
   }
 }
