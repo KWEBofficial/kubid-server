@@ -53,4 +53,18 @@ export default class ProductService {
       throw new InternalServerError('제품 정보를 수정하지 못했어요.');
     }
   }
+
+  static async deleteProductByIds(
+    userId: number,
+    productId: number,
+  ): Promise<void> {
+    try {
+      await ProductRepository.softDelete({
+        id: productId,
+        user: { id: userId },
+      });
+    } catch (error) {
+      throw new InternalServerError('제품을 취소하지 못했어요.');
+    }
+  }
 }

@@ -104,3 +104,34 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const productId = parseInt(req.params.productId, 10);
+    const product = await ProductService.getProductByProductId(productId);
+    if (!productId || !product) {
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+    }
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+    // 로그인한 사용자와 글을 작성한 사용자가 같은지 확인
+    const user = await UserService.getUserByProductId(productId);
+    if (!user)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+    if (user.id !== userId)
+      throw new BadRequestError('판매자만 글을 삭제할 수 있어요.');
+
+    await ProductService.deleteProductByIds(userId, productId);
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
