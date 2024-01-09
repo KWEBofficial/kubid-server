@@ -8,7 +8,7 @@ import {
 import User from './user.entity';
 import Department from './department.entity';
 import { BaseEntity } from './base.entity';
-import { Status } from '../type/product/product.dto';
+
 /*
 Table product {
   id integer [primary key]
@@ -48,7 +48,7 @@ export default class Product extends BaseEntity {
   desc!: string;
 
   @Column()
-  status!: Status;
+  status!: 'progress' | 'complete';
 
   @Column()
   lowerBound!: number;
