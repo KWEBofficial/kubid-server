@@ -16,13 +16,13 @@ export const getAllProducts: RequestHandler = async (req, res, next) => {
           id: product.id,
           productName: product.productName,
           user_id: product.user.id,
-          departmentId: product.department.id,
           status: product.status,
           currentHighestPrice: currentHighestPrice,
           upperBound: product.upperBound,
           imageId: product.imageId,
-          tradeLocation: product.tradingPlace,
-          tradeDate: product.tradingTime,
+          departmentId: product.department.id,
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt,
         };
       }),
     );

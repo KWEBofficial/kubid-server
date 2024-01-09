@@ -11,12 +11,9 @@ export interface ProductDTO {
   currentHighestPrice: number;
   upperBound: number;
   imageId: number;
-<<<<<<< HEAD
-=======
   tags: string[];
   tradeLocation: string;
   tradeDate: string;
->>>>>>> bbfafb12889d041a16a396b498e41b466b32836d
   departmentId: number;
   createdAt: string;
   updatedAt?: string;

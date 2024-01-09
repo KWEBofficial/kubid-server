@@ -23,21 +23,3 @@ export default class ProductService {
     });
   }
 }
-<<<<<<< HEAD
-=======
-
-/*
-data: {
-    productName: string;
-    userId: number;
-    desc: string;
-    status: Status;
-    lowerBound: number;
-    upperBound: number;
-    imageId: number;
-    tradingPlace: string;
-    tradingTime: string;
-    department_id: string;
-  }
-*/
->>>>>>> bbfafb12889d041a16a396b498e41b466b32836d
