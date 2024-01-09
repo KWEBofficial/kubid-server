@@ -44,9 +44,13 @@ export const updateUser: RequestHandler = async (req, res, next) => {
     if (!userAffected)
       throw new InternalServerError('유저 정보를 수정하지 못했어요.');
 
-    const { email, department, createdAt } = (await UserService.getUserById(
-      userId,
-    )) as User;
+    const user = await UserService.getUserById(userId);
+    if (!user)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해 주세요.',
+      );
+    const { email, department, createdAt } = user;
+
     const userResponse = {
       userId,
       email,
