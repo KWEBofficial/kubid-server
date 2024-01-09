@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import { BadRequestError } from '../../util/customErrors';
-import { ProductDTO } from '../../type/product/product.dto';
 
 import ProductService from '../../service/product.service';
 import BiddingService from '../../service/bidding.service';
@@ -34,15 +33,5 @@ export const getAllProducts: RequestHandler = async (req, res, next) => {
     res.json(ret);
   } catch (error) {
     next(error);
-  }
-};
-
-export const createProduct: RequestHandler = async (req, res) => {
-  try {
-    const productData: ProductDTO = req.body;
-    const createdProduct = await ProductService.createProduct(productData);
-    return res.status(201).json(createdProduct);
-  } catch (error) {
-    return res.status(500).json({ error: '문제가 발생했어요.' });
   }
 };
