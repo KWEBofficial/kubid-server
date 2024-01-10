@@ -53,5 +53,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6M
 
 
 ### 상품 검색
-GET http://localhost:3000/products/search?search=상품명 HTTP/1.1
+GET http://localhost:3000/products?search=B HTTP/1.1
 Content-Type: application/json
