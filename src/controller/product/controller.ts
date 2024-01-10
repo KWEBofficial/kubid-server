@@ -42,6 +42,7 @@ export const getAllProducts: RequestHandler = async (req, res, next) => {
 export const createProduct: RequestHandler = async (req, res) => {
   try {
     const productData: CreateProductDTO = req.body;
+
     const createdProduct = await ProductService.createProduct(productData);
     return res.status(201).json(createdProduct);
   } catch (error) {
