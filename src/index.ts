@@ -27,4 +27,5 @@ passportConfigFunc();
 
 // swagger UI 관련 설정
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+console.log('API Documentation : http://localhost:3000/api-docs');
 app.listen(PORT, () => console.log(`Server is started!`));
