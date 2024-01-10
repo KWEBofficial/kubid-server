@@ -8,6 +8,7 @@ import {
 import User from './user.entity';
 import Department from './department.entity';
 import { BaseEntity } from './base.entity';
+
 /*
 Table product {
   id integer [primary key]

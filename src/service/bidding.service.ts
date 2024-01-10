@@ -9,9 +9,12 @@ export default class BiddingService {
         .where('bidding.product_id = :productId', { productId })
         .getRawOne();
 
+      if (!bid)
+        throw new InternalServerError('현재 최고입찰가를 찾지 못했어요.');
+
       return bid.highestPrice;
     } catch (error) {
-      throw new InternalServerError('상품 최고 입찰가를 불러오지 못했어요.');
+      throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
     }
   }
 }
