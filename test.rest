@@ -6,13 +6,13 @@ Content-Type: application/json
     "email": "hayeongpar@naver.com",
     "nickname": "TEST",
     "password": "string",
-    "email": "hayeongpark4@naver.com",
+    "email": "hayeongpark45@naver.com",
     "nickname": "TEST",
-    "password": "12345",
+    "password": "123455",
 
-    "email": "hayeongpark4@naver.com",
+    "email": "hayeongpark45@naver.com",
     "nickname": "TEST",
-    "password": "12345",
+    "password": "123455",
     "departmentId": 1
 }
 
@@ -39,16 +39,17 @@ POST http://localhost:3000/products HTTP/1.1
 Content-Type: application/json
 
 {
+  "user_id" : 1,
+  "department_id": 10,
   "productName": "가상 상품 1",
   "desc": "이 상품은 테스트를 위한 더미 상품입니다.",
   "upperBound": 10000,
   "lowerBound": 5000,
   "imageId": 12345,
-  "tags": ["가전", "최신모델", "할인"],
   "tradingPlace": "하나스퀘어",
-  "tradingTime": "2024-01-20 15:00",
-  "createdAt": "2024-01-10 12:00",
-  "updatedAt": "2024-01-11 13:00"
+  "tradingTime": "2024-01-10 01:18:12.000000",
+  "createdAt": "2024-01-10 01:18:12.000000",
+  "updatedAt": "2024-01-10 01:18:12.000000"
 }
 
 

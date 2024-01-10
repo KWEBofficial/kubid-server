@@ -1,23 +1,32 @@
 import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
 import CreateProductDTO from '../type/product/createproduct.dto';
+import UserService from './user.service';
 import { InternalServerError } from '../util/customErrors';
 export default class ProductService {
   //상품 등록하기
   static async createProduct(productData: CreateProductDTO): Promise<Product> {
     try {
+      const user = await UserService.getUserById(productData.user_id);
+      if (!user) {
+        throw new Error('해당 ID의 사용자가 존재하지 않습니다.');
+      }
+
       const CreateProductDAO = {
+        department: user.department,
+        user: user,
         productName: productData.productName,
         desc: productData.desc,
         upperBound: productData.upperBound,
         lowerBound: productData.lowerBound,
         imageId: productData.imageId,
-        tags: productData.tags,
         tradingPlace: productData.tradingPlace,
         tradingTime: productData.tradingTime,
         createdAt: productData.createdAt,
         updatedAt: productData.updatedAt,
+        status: productData.status,
       };
+      console.log(CreateProductDAO);
 
       const product = ProductRepository.create(CreateProductDAO);
       return await ProductRepository.save(product);

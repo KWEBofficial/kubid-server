@@ -38,6 +38,8 @@ export default class UserService {
         department: { ...department },
       };
 
+      console.log(createUserDAO);
+
       const user = UserRepository.create(createUserDAO);
       return await UserRepository.save(user);
     } catch (error) {
