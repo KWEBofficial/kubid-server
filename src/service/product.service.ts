@@ -13,9 +13,9 @@ export default class ProductService {
         throw new Error('해당 ID의 사용자가 존재하지 않습니다.');
       }
 
-      const CreateProductDAO: CreateProductDTO = {
-        department_id: user.department.id,
-        user_id: user.id,
+      const CreateProductDAO = {
+        department: user.department,
+        user: user,
         productName: productData.productName,
         desc: productData.desc,
         upperBound: productData.upperBound,
@@ -23,8 +23,6 @@ export default class ProductService {
         imageId: productData.imageId,
         tradingPlace: productData.tradingPlace,
         tradingTime: productData.tradingTime,
-        createdAt: productData.createdAt,
-        updatedAt: productData.updatedAt,
         status: Status.Progress,
       };
 
