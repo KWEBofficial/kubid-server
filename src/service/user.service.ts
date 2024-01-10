@@ -3,6 +3,7 @@ import UserRepository from '../repository/user.repository';
 import CreateUserDTO from '../type/user/create.input';
 import UpdateUserDTO from '../type/user/update.input';
 import { InternalServerError } from '../util/customErrors';
+import ProductRepository from '../repository/product.repository';
 import DepartmentService from './department.service';
 
 export default class UserService {
@@ -61,5 +62,22 @@ export default class UserService {
       );
 
     return user;
+  }
+
+  static async getUserByProductId(productId: number): Promise<User | null> {
+    try {
+      const product = await ProductRepository.findOne({
+        where: { id: productId },
+        relations: ['user'],
+      });
+
+      if (product) {
+        return product.user;
+      } else {
+        return null; // Product not found
+      }
+    } catch (error) {
+      throw new InternalServerError('유저 정보를 불러오지 못했어요.');
+    }
   }
 }

@@ -121,7 +121,6 @@ export const signIn: RequestHandler = async (req, res) => {
   */
   try {
     // local로 등록한 인증과정 실행
-    console.log('check1');
     passport.authenticate(
       'local',
       (passportError: Error, user: User, info: any) => {
