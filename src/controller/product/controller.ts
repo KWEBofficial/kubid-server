@@ -21,7 +21,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
     const tagsById = await TagService.getTagsById(productId);
     res.status(200).json({
       id: product.id,
-      product_name: product.productName,
+      productName: product.productName,
       upperBound: product.upperBound,
       currentHighestPrice: maxPrice,
       imageId: product.imageId,
@@ -131,6 +131,38 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
     await ProductService.deleteProductByIds(userId, productId);
 
     res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const products = await ProductService.getAllProducts();
+
+    const ret = await Promise.all(
+      products.map(async (product) => {
+        const currentHighestPrice =
+          await BiddingService.getHighestPriceByProductId(product.id);
+        return {
+          id: product.id,
+          productName: product.productName,
+          user_id: product.user.id,
+          status: product.status,
+          currentHighestPrice: currentHighestPrice,
+          upperBound: product.upperBound,
+          imageId: product.imageId,
+          departmentId: product.department.id,
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt,
+        };
+      }),
+    );
+
+    if (!products || !ret)
+      throw new BadRequestError('정보를 불러오는데 실패했어요.');
+
+    res.json(ret);
   } catch (error) {
     next(error);
   }

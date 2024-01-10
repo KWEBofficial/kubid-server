@@ -4,6 +4,7 @@ import ProductRepository from '../repository/product.repository';
 import { InternalServerError } from '../util/customErrors';
 import UpdateProductDTO from '../type/product/update.input';
 
+import { InternalServerError } from '../util/customErrors';
 export default class ProductService {
   static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
     try {
@@ -66,5 +67,24 @@ export default class ProductService {
     } catch (error) {
       throw new InternalServerError('제품을 취소하지 못했어요.');
     }
+
+  //모든 상품 찾기
+  static async getAllProducts(): Promise<Product[]> {
+    try {
+      return await ProductRepository.find({
+        relations: ['user', 'department'],
+      });
+    } catch (error) {
+      throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
+    }
+  }
+
+  //페이징
+  static async findProducts(page: number, limit: number): Promise<Product[]> {
+    const skip = (page - 1) * limit;
+    return ProductRepository.find({
+      skip: skip,
+      take: limit,
+    });
   }
 }

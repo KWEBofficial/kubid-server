@@ -3,11 +3,11 @@ import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import { generateHashedPassword } from '../../util/authentication';
 import UserService from '../../service/user.service';
 import DepartmentService from '../../service/department.service';
-import CreateUserDTO from '../../type/user/create.input';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import User from '../../entity/user.entity';
 import * as dotenv from 'dotenv';
+import CreateUserDTO from '../../type/user/create.input';
 dotenv.config({ path: '../../../.env.dev' });
 
 declare global {
@@ -27,6 +27,30 @@ declare global {
 }
 
 export const signUp: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.auto = false;
+  #swagger.summary = "회원가입"
+  #swagger.tags = ['Auth'];
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+            $ref: "#/components/schemas/CreateUserReqDTO"
+        }
+      }
+    }
+  };
+  #swagger.responses[201] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/CreateUserResDTO"
+        }
+      }           
+    }
+  };
+  */
   try {
     const { password, email, departmentId: departmentIdAsString } = req.body;
     const departmentId = Number(departmentIdAsString);
@@ -63,6 +87,7 @@ export const signUp: RequestHandler = async (req, res, next) => {
       departmentId,
       createdAt: saveUserResult.createdAt,
     };
+    // #swagger.responses[201] = { description: 'User registered successfully.' }
     res.status(201).json(userResponse);
   } catch (error) {
     next(error);
@@ -70,6 +95,30 @@ export const signUp: RequestHandler = async (req, res, next) => {
 };
 
 export const signIn: RequestHandler = async (req, res) => {
+  /*
+  #swagger.auto = false;
+  #swagger.summary = "로그인"
+  #swagger.tags = ['Auth'];
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+            $ref: "#/components/schemas/LoginReqDTO"
+        }
+      }
+    }
+  };
+  #swagger.responses[201] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/LoginResDTO"
+        }
+      }           
+    }
+  };
+  */
   try {
     // local로 등록한 인증과정 실행
     passport.authenticate(
