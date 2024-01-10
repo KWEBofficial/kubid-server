@@ -1,25 +1,25 @@
 import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
-
-import { ProductDTO } from '../type/product/product.dto';
+import CreateProductDTO from '../type/product/createproduct.dto';
 import { InternalServerError } from '../util/customErrors';
 export default class ProductService {
   //상품 등록하기
-  static async createProduct(productData: ProductDTO): Promise<Product> {
+  static async createProduct(productData: CreateProductDTO): Promise<Product> {
     try {
-      const productDAO = {
-        id: productData.id,
-        product_name: productData.product_name,
-        user_id: productData.user_id,
-        status: productData.status,
-        currentHighestPrice: productData.currentHighestPrice,
+      const CreateProductDAO = {
+        productName: productData.productName,
+        desc: productData.desc,
         upperBound: productData.upperBound,
+        lowerBound: productData.lowerBound,
         imageId: productData.imageId,
-        departmentId: productData.departmentId,
+        tags: productData.tags,
+        tradingPlace: productData.tradingPlace,
+        tradingTime: productData.tradingTime,
         createdAt: productData.createdAt,
         updatedAt: productData.updatedAt,
       };
-      const product = ProductRepository.create(productDAO);
+
+      const product = ProductRepository.create(CreateProductDAO);
       return await ProductRepository.save(product);
     } catch (error) {
       throw new InternalServerError('상품을 등록하는데 실패했어요.');
