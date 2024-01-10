@@ -22,10 +22,10 @@ POST http://localhost:3000/auth/sign-in HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "hayeongpark@naver.com",
+    "email": "hayeongpar@naver.com",
     "password": "string",
-    "email": "hayeongpark4@naver.com",
-    "password": "12345"
+    "email": "hayeongpar@naver.com",
+    "password": "string"
 }
 
 
@@ -37,6 +37,7 @@ Content-Type: application/json
 ### 상품 등록 테스트
 POST http://localhost:3000/products HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmlja25hbWUiOiJURVNUIiwicGFzc3dvcmQiOiJzaGE1MTI6amkxUkVMRTlKTEdIbFVpQm5OaG12b2Z5Z3F0M0gvV0tnMjl1LyszOXExUT06MjA3MjAzOjY0OjlUdEFsK2ZaT1A4TUJNUEJiSGN6NUZKcXBGeFJCOTh2cG9GOEtTTjRJamxaWWtTZ0tJNEdIREx3N240Uy96U0FTN3JzWnRIQnVyMHoyYk95RlJPMXBnPT0iLCJpYXQiOjE3MDQ4Njc3ODAsImV4cCI6MTcwNDg3MTM4MH0.bmNkSuhhMfvitgVO25uDxs_WWkIBx57O6D8kk5s4HRk
 
 {
   "user_id" : 1,

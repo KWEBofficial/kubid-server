@@ -27,7 +27,7 @@ export default class ProductService {
         updatedAt: productData.updatedAt,
         status: Status.Progress,
       };
-      console.log(CreateProductDAO);
+
       const product = ProductRepository.create(CreateProductDAO);
       return await ProductRepository.save(product);
     } catch (error) {
