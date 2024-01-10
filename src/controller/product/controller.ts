@@ -35,3 +35,18 @@ export const getAllProducts: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// 상품 검색
+export const searchProducts: RequestHandler = async (req, res) => {
+  try {
+    const searchTerm = req.query.search as string;
+    if (!searchTerm) {
+      return res.status(400).json({ error: '검색어가 필요해요.' });
+    }
+
+    const products = await ProductService.searchProducts(searchTerm);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: '서버 오류가 발생했어요.' });
+  }
+};

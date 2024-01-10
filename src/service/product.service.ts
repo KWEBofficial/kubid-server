@@ -1,6 +1,6 @@
 import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
-
+import { Like } from 'typeorm';
 import { InternalServerError } from '../util/customErrors';
 export default class ProductService {
   static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
@@ -20,7 +20,7 @@ export default class ProductService {
       );
     }
   }
-  //모든 상품 찾기
+  //모든 상품 조회
   static async getAllProducts(): Promise<Product[]> {
     try {
       return await ProductRepository.find({
@@ -37,6 +37,15 @@ export default class ProductService {
     return ProductRepository.find({
       skip: skip,
       take: limit,
+    });
+  }
+
+  // 상품 검색
+  static async searchProducts(searchTerm: string): Promise<Product[]> {
+    return ProductRepository.find({
+      where: {
+        productName: Like(`%${searchTerm}%`),
+      },
     });
   }
 }
