@@ -29,26 +29,26 @@ declare global {
 export const signUp: RequestHandler = async (req, res, next) => {
   /*
   #swagger.auto = false;
-  #swagger.summary = "회원가입"
+  #swagger.summary = '회원가입';
   #swagger.tags = ['Auth'];
   #swagger.requestBody = {
     required: true,
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-            $ref: "#/components/schemas/CreateUserReqDTO"
-        }
-      }
-    }
+          $ref: '#/components/schemas/CreateUserReqDTO',
+        },
+      },
+    },
   };
   #swagger.responses[201] = {
     content: {
-      "application/json": {
-        schema:{
-          $ref: "#/components/schemas/CreateUserResDTO"
-        }
-      }           
-    }
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/CreateUserResDTO',
+        },
+      },
+    },
   };
   */
   try {
@@ -97,26 +97,26 @@ export const signUp: RequestHandler = async (req, res, next) => {
 export const signIn: RequestHandler = async (req, res) => {
   /*
   #swagger.auto = false;
-  #swagger.summary = "로그인"
+  #swagger.summary = '로그인';
   #swagger.tags = ['Auth'];
   #swagger.requestBody = {
     required: true,
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-            $ref: "#/components/schemas/LoginReqDTO"
-        }
-      }
-    }
+          $ref: '#/components/schemas/LoginReqDTO',
+        },
+      },
+    },
   };
   #swagger.responses[201] = {
     content: {
-      "application/json": {
-        schema:{
-          $ref: "#/components/schemas/LoginResDTO"
-        }
-      }           
-    }
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/LoginResDTO',
+        },
+      },
+    },
   };
   */
   try {
