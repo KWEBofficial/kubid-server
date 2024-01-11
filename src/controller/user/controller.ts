@@ -118,7 +118,12 @@ export const updateUser: RequestHandler = async (req, res, next) => {
 export const getSellingProducts: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
-  #swagger.summary = '현재 판매 중인 상품 목록';
+  #swagger.summary = "현재 판매 중인 상품 목록";
+  #swagger.parameters['Authorization'] = {
+    in: 'header',                                     
+    required: true,                     
+    type: "string",                       
+  };
   #swagger.responses[200] = {
     description: '상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.',
     content: {
@@ -160,6 +165,74 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
       });
+    }
+    res.status(200).json(userResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getBuyingProducts: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.tags = ['User'];
+  #swagger.summary = "현재 구매 중인 상품 목록";
+  #swagger.description = "현재 로그인 유저가 가장 최근에 입찰을 넣은 상품 순서대로 반환합니다."
+  #swagger.parameters['Authorization'] = {
+    in: 'header',                                     
+    required: true,                     
+    type: "string",                       
+  };
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지 번호 ex) 1",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지당 상품 개수 ex) 5",                       
+  };
+  #swagger.responses[200] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/CurrentProductBuyResDTO"
+        }
+      }           
+    }
+  };
+  #swagger.security = [{
+            "bearerAuth": []
+  }];
+  */
+  try {
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const { page: pageAsString, pageSize: pageSizeAsString } = req.query;
+    const page = Number(pageAsString);
+    const pageSize = Number(pageSizeAsString);
+    if (!page || !pageSize)
+      throw new BadRequestError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const userResponse = [];
+    const products = await ProductService.getBuyingProductsByUserId(
+      userId,
+      page,
+      pageSize,
+    );
+    for (const product of products) {
+      const current_highest_price =
+        await BiddingService.getHighestPriceByProductId(product.id);
+
+      userResponse.push({ ...product, current_highest_price });
     }
     res.status(200).json(userResponse);
   } catch (error) {

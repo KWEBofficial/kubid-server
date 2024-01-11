@@ -96,6 +96,21 @@ const doc = {
         $createdAt: '2024-01-04T00:00:00.000Z',
         $updatedAt: '2024-01-04T00:00:00.000Z',
       },
+      CurrentProductBuyResDTO: [
+        {
+          $id: 1,
+          $product_name: '전공책 팝니다',
+          $user_id: 1,
+          $status: 'progress',
+          $user_highest_price: 35000,
+          $upper_bound: 50000,
+          $image_id: 1,
+          $department_id: 1,
+          $created_at: '2024-01-10T07:10:11.684Z',
+          $updated_at: '2024-01-10T07:10:11.684Z',
+          $current_highest_price: 40000,
+        },
+      ],
       ProductsProductsIDResDTO: {
         $id: 1,
         $product_name: '[급처] 판매 중',
