@@ -10,26 +10,27 @@ export const getUser: RequestHandler = async (req, res, next) => {
   /*
   #swagger.auto = false;
   #swagger.tags = ['User'];
-  #swagger.summary = "현재 로그인 유저 정보";
+  #swagger.summary = '현재 로그인 유저 정보';
   #swagger.parameters['Authorization'] = {
-    in: 'header',                                     
-    required: true,                     
-    type: "string",                       
+    in: 'header',
+    required: false,
+    type: 'string',
   };
-  #swagger.responses[201] = {
+  #swagger.responses[200] = {
     content: {
-      "application/json": {
-        schema:{
-          $ref: "#/components/schemas/CurrentUserResDTO"
-        }
-      }           
-    }
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/CurrentUserResDTO',
+        },
+      },
+    },
   };
-  #swagger.security = [{
-            "bearerAuth": []
-  }];
+  #swagger.security = [
+    {
+      bearerAuth: [],
+    },
+  ];
   */
-
   try {
     const userId = req.userId;
     if (!userId) throw new BadRequestError('temp');
@@ -50,34 +51,36 @@ export const getUser: RequestHandler = async (req, res, next) => {
 export const updateUser: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
-  #swagger.summary = "현재 로그인 유저 정보 수정";
+  #swagger.summary = '현재 로그인 유저 정보 수정';
   #swagger.parameters['Authorization'] = {
-    in: 'header',                                     
-    required: true,                     
-    type: "string",                       
+    in: 'header',
+    required: false,
+    type: 'string',
   };
   #swagger.requestBody = {
-    required: true,
+    required: false,
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-            $ref: "#/components/schemas/CurrentUserUpdateReqDTO"
-        }
-      }
-    }
+          $ref: '#/components/schemas/CurrentUserUpdateReqDTO',
+        },
+      },
+    },
   };
   #swagger.responses[200] = {
     content: {
-      "application/json": {
-        schema:{
-          $ref: "#/components/schemas/CurrentUserUpdateResDTO"
-        }
-      }           
-    }
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/CurrentUserUpdateResDTO',
+        },
+      },
+    },
   };
-  #swagger.security = [{
-            "bearerAuth": []
-  }];
+  #swagger.security = [
+    {
+      bearerAuth: [],
+    },
+  ];
   */
   try {
     const userId = req.userId;
@@ -115,24 +118,22 @@ export const updateUser: RequestHandler = async (req, res, next) => {
 export const getSellingProducts: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
-  #swagger.summary = "현재 판매 중인 상품 목록";
-  #swagger.parameters['Authorization'] = {
-    in: 'header',                                     
-    required: false,                     
-    type: "string",                       
-  };
+  #swagger.summary = '현재 판매 중인 상품 목록';
   #swagger.responses[200] = {
+    description: '상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.',
     content: {
-      "application/json": {
-        schema:{
-          $ref: "#/components/schemas/CurrentProductSellResDTO"
-        }
-      }           
-    }
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/CurrentProductSellResDTO',
+        },
+      },
+    },
   };
-  #swagger.security = [{
-            "bearerAuth": []
-  }];
+  #swagger.security = [
+    {
+      bearerAuth: [],
+    },
+  ];
   */
   try {
     const userId = req.userId;
