@@ -15,9 +15,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
     }
-    const biddings = await BiddingService.getBiddingsByProductId(productId);
-    const prices = biddings.map((bidding) => bidding.price);
-    const maxPrice = Math.max(...prices);
+    const maxPrice = await BiddingService.getHighestPriceByProductId(productId);
     const tagsById = await TagService.getTagsById(productId);
     res.status(200).json({
       id: product.id,

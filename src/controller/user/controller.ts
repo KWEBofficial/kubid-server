@@ -120,6 +120,7 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
   #swagger.tags = ['User'];
   #swagger.summary = '현재 판매 중인 상품 목록';
   #swagger.responses[200] = {
+    description: '상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.',
     content: {
       'application/json': {
         schema: {
@@ -144,20 +145,17 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
     const userResponse = [];
     const products = await ProductService.getSellingProductsByUserId(userId);
     for (const product of products) {
-      const biddings = await BiddingService.getBiddingsByProductId(product.id);
-      const prices = biddings.map((bidding) => bidding.price);
-      const maxPrice = Math.max(...prices);
-
+      const maxPrice = await BiddingService.getHighestPriceByProductId(
+        product.id,
+      );
       userResponse.push({
         id: product.id,
-        product_name: product.productName,
-        upper_bound: product.upperBound,
-        currentHighestPrice: maxPrice,
-        imageId: product.imageId,
-
-        user_id: product.user.id,
+        productName: product.productName,
+        userId: product.user.id,
         status: product.status,
-
+        currentHighestPrice: maxPrice,
+        upper_bound: product.upperBound,
+        imageId: product.imageId,
         departmentId: product.department.id,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,

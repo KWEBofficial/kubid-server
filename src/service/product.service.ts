@@ -1,10 +1,8 @@
-import User from '../entity/user.entity';
 import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
 import { InternalServerError } from '../util/customErrors';
 import UpdateProductDTO from '../type/product/update.input';
 
-import { InternalServerError } from '../util/customErrors';
 export default class ProductService {
   static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
     try {
@@ -67,6 +65,7 @@ export default class ProductService {
     } catch (error) {
       throw new InternalServerError('제품을 취소하지 못했어요.');
     }
+  }
 
   //모든 상품 찾기
   static async getAllProducts(): Promise<Product[]> {
