@@ -9,3 +9,7 @@ dist
 
 # rest client
 *.rest
+
+test.rest
+
+swagger-output.json

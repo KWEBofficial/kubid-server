@@ -27,6 +27,10 @@
     {
       "name": "Bidding",
       "description": "Bidding endpoints"
+    },
+    {
+      "name": "Tag",
+      "description": "Tag endpoints"
     }
   ],
   "paths": {
@@ -41,14 +45,14 @@
           {
             "name": "Authorization",
             "in": "header",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "content": {
               "application/json": {
                 "schema": {
@@ -56,7 +60,7 @@
                 }
               }
             },
-            "description": "Created"
+            "description": "OK"
           }
         },
         "security": [
@@ -75,7 +79,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -99,7 +103,7 @@
           }
         ],
         "requestBody": {
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -129,7 +133,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.",
             "content": {
               "application/json": {
                 "schema": {
@@ -268,6 +272,105 @@
           }
         }
       }
+    },
+    "/products/{productId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productName": {
+                    "example": "any"
+                  },
+                  "upperBound": {
+                    "example": "any"
+                  },
+                  "imageId": {
+                    "example": "any"
+                  },
+                  "desc": {
+                    "example": "any"
+                  },
+                  "tradingPlace": {
+                    "example": "any"
+                  },
+                  "tradingTime": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -284,11 +387,11 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "sagjin0000@korea.ac.kr"
+            "example": "rinothehero@korea.ac.kr"
           },
           "nickname": {
             "type": "string",
-            "example": "mobius"
+            "example": "superrino"
           },
           "password": {
             "type": "string",
@@ -296,7 +399,7 @@
           },
           "departmentId": {
             "type": "number",
-            "example": 1
+            "example": 49
           }
         },
         "required": [
@@ -315,15 +418,15 @@
           },
           "email": {
             "type": "string",
-            "example": "sagjin0000@korea.ac.kr"
+            "example": "rinothehero@korea.ac.kr"
           },
           "nickname": {
             "type": "string",
-            "example": "mobius"
+            "example": "superrino"
           },
           "departmentId": {
             "type": "number",
-            "example": 1
+            "example": 49
           },
           "createdAt": {
             "type": "string",
@@ -343,7 +446,7 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "sagjin0000@korea.ac.kr"
+            "example": "rinothehero@korea.ac.kr"
           },
           "password": {
             "type": "string",
@@ -376,15 +479,28 @@
           },
           "email": {
             "type": "string",
-            "example": "sagjin0000@korea.ac.kr"
+            "example": "rinothehero@korea.ac.kr"
           },
           "nickname": {
             "type": "string",
-            "example": "mobius"
+            "example": "superrino"
           },
           "departmentId": {
-            "type": "number",
-            "example": 1
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 49
+              },
+              "departmentName": {
+                "type": "string",
+                "example": "컴퓨터학과"
+              }
+            },
+            "required": [
+              "id",
+              "departmentName"
+            ]
           },
           "createdAt": {
             "type": "string",
@@ -404,7 +520,7 @@
         "properties": {
           "nickname": {
             "type": "string",
-            "example": "mobius"
+            "example": "superrino"
           },
           "password": {
             "type": "string",
@@ -425,7 +541,7 @@
           },
           "email": {
             "type": "string",
-            "example": "sagjin0000@korea.ac.kr"
+            "example": "rinothehero@korea.ac.kr"
           },
           "nickname": {
             "type": "string",
@@ -433,7 +549,7 @@
           },
           "departmentId": {
             "type": "number",
-            "example": 1
+            "example": 49
           },
           "createdAt": {
             "type": "string",
@@ -455,11 +571,11 @@
             "type": "number",
             "example": 1
           },
-          "product_name": {
+          "productName": {
             "type": "string",
             "example": "[급처] 판매 중"
           },
-          "user_id": {
+          "userId": {
             "type": "number",
             "example": 1
           },
@@ -467,42 +583,42 @@
             "type": "string",
             "example": "progress"
           },
-          "lower_bound": {
+          "currentHighestPrice": {
             "type": "number",
             "example": 5000
           },
-          "upper_bound": {
+          "upperBound": {
             "type": "number",
             "example": 10000
           },
-          "image_id": {
+          "imageId": {
             "type": "number",
             "example": 1
           },
-          "department_id": {
+          "departmentId": {
             "type": "number",
             "example": 1
           },
-          "created_at": {
+          "createdAt": {
             "type": "string",
             "example": "2024-01-04T00:00:00.000Z"
           },
-          "updated_at": {
+          "updatedAt": {
             "type": "string",
             "example": "2024-01-04T00:00:00.000Z"
           }
         },
         "required": [
           "id",
-          "product_name",
-          "user_id",
+          "productName",
+          "userId",
           "status",
-          "lower_bound",
-          "upper_bound",
-          "image_id",
-          "department_id",
-          "created_at",
-          "updated_at"
+          "currentHighestPrice",
+          "upperBound",
+          "imageId",
+          "departmentId",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "CurrentProductBuyResDTO": {
