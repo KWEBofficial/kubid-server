@@ -154,7 +154,7 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         userId: product.user.id,
         status: product.status,
         currentHighestPrice: maxPrice,
-        upperBound: product.upperBound,
+        upper_bound: product.upperBound,
         imageId: product.imageId,
         departmentId: product.department.id,
         createdAt: product.createdAt,
