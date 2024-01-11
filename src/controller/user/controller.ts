@@ -118,7 +118,7 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
   #swagger.summary = "현재 판매 중인 상품 목록";
   #swagger.parameters['Authorization'] = {
     in: 'header',                                     
-    required: false,                     
+    required: true,                     
     type: "string",                       
   };
   #swagger.responses[200] = {
@@ -167,6 +167,40 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
 };
 
 export const getBuyingProducts: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.tags = ['User'];
+  #swagger.summary = "현재 구매 중인 상품 목록";
+  #swagger.description = "현재 로그인 유저가 가장 최근에 입찰을 넣은 상품 순서대로 반환합니다."
+  #swagger.parameters['Authorization'] = {
+    in: 'header',                                     
+    required: true,                     
+    type: "string",                       
+  };
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지 번호 ex) 1",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지당 상품 개수 ex) 5",                       
+  };
+  #swagger.responses[200] = {
+    content: {
+      "application/json": {
+        schema:{
+          $ref: "#/components/schemas/CurrentProductBuyResDTO"
+        }
+      }           
+    }
+  };
+  #swagger.security = [{
+            "bearerAuth": []
+  }];
+  */
   try {
     const userId = req.userId;
     if (!userId)
@@ -189,9 +223,8 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       pageSize,
     );
     for (const product of products) {
-      const biddings = await BiddingService.getBiddingsByProductId(product.id);
-      const prices = biddings.map((bidding) => bidding.price);
-      const current_highest_price = Math.max(...prices);
+      const current_highest_price =
+        await BiddingService.getHighestPriceByProductId(product.id);
 
       userResponse.push({ ...product, current_highest_price });
     }
