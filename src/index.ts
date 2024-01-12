@@ -7,7 +7,6 @@ import router from './controller/router';
 import errorHandler from './util/errorHandler';
 import passport from 'passport';
 import { passportConfigFunc } from './passport';
-// swagger UI 관련 설정
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('../swagger-output.json');
 const PORT = Number(process.env.PORT) || 3000;
@@ -27,5 +26,6 @@ app.use(passport.initialize());
 passportConfigFunc();
 
 // swagger UI 관련 설정
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs 대신 swagger로 수정한다.
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+console.log('API Documentation : http://localhost:3000/api-docs');
 app.listen(PORT, () => console.log(`Server is started!`));

@@ -1,9 +1,14 @@
 import { Router } from 'express';
-
-import { getAllProducts } from './controller';
-import { bidProduct, giveUpBidding } from './controller';
 import { decodeToken } from '../auth/middleware';
-import { createProduct } from './controller';
+import {
+  getAllProducts,
+  getProductDetail,
+  updateProductDetail,
+  deleteProduct,
+  bidProduct,
+  giveUpBidding,
+  createProduct,
+} from './controller';
 
 const productRouter = Router();
 
@@ -12,5 +17,8 @@ productRouter.post('', decodeToken, createProduct);
 productRouter.post('/:productId/bidding', decodeToken, bidProduct);
 productRouter.post('/bidding/give-up/:productId', decodeToken, giveUpBidding);
 productRouter.post('/bidding/:productId', decodeToken, bidProduct);
+productRouter.get('/:productId', getProductDetail);
+productRouter.patch('/:productId', decodeToken, updateProductDetail);
+productRouter.delete('/:productId', decodeToken, deleteProduct);
 
 export default productRouter;

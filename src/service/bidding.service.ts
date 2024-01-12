@@ -1,6 +1,6 @@
-import Bidding from '../entity/bidding.entity';
 import BiddingRepository from '../repository/bidding.repository';
 import { InternalServerError } from '../util/customErrors';
+import Bidding from '../entity/bidding.entity';
 
 export default class BiddingService {
   static async getHighestPriceByProductId(productId: number): Promise<number> {
