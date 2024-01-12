@@ -125,6 +125,68 @@
           {
             "name": "Authorization",
             "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentProductSellResDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/current-user/product/buy": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "현재 구매 중인 상품 목록",
+        "description": "현재 로그인 유저가 가장 최근에 입찰을 넣은 상품 순서대로 반환합니다.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "페이지 번호 ex) 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "description": "페이지당 상품 개수 ex) 5",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -136,7 +198,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentProductSellResDTO"
+                  "$ref": "#/components/schemas/CurrentProductBuyResDTO"
                 }
               }
             }
@@ -207,6 +269,105 @@
                 "$ref": "#/components/schemas/LoginReqDTO"
               }
             }
+          }
+        }
+      }
+    },
+    "/products/{productId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productName": {
+                    "example": "any"
+                  },
+                  "upperBound": {
+                    "example": "any"
+                  },
+                  "imageId": {
+                    "example": "any"
+                  },
+                  "desc": {
+                    "example": "any"
+                  },
+                  "tradingPlace": {
+                    "example": "any"
+                  },
+                  "tradingTime": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -410,11 +571,11 @@
             "type": "number",
             "example": 1
           },
-          "product_name": {
+          "productName": {
             "type": "string",
             "example": "[급처] 판매 중"
           },
-          "user_id": {
+          "userId": {
             "type": "number",
             "example": 1
           },
@@ -422,43 +583,108 @@
             "type": "string",
             "example": "progress"
           },
-          "lower_bound": {
+          "currentHighestPrice": {
             "type": "number",
             "example": 5000
           },
-          "upper_bound": {
+          "upperBound": {
             "type": "number",
             "example": 10000
           },
-          "image_id": {
+          "imageId": {
             "type": "number",
             "example": 1
           },
-          "department_id": {
+          "departmentId": {
             "type": "number",
             "example": 1
           },
-          "created_at": {
+          "createdAt": {
             "type": "string",
             "example": "2024-01-04T00:00:00.000Z"
           },
-          "updated_at": {
+          "updatedAt": {
             "type": "string",
             "example": "2024-01-04T00:00:00.000Z"
           }
         },
         "required": [
           "id",
-          "product_name",
-          "user_id",
+          "productName",
+          "userId",
           "status",
-          "lower_bound",
-          "upper_bound",
-          "image_id",
-          "department_id",
-          "created_at",
-          "updated_at"
+          "currentHighestPrice",
+          "upperBound",
+          "imageId",
+          "departmentId",
+          "createdAt",
+          "updatedAt"
         ]
+      },
+      "CurrentProductBuyResDTO": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 1
+            },
+            "product_name": {
+              "type": "string",
+              "example": "전공책 팝니다"
+            },
+            "user_id": {
+              "type": "number",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "example": "progress"
+            },
+            "user_highest_price": {
+              "type": "number",
+              "example": 35000
+            },
+            "upper_bound": {
+              "type": "number",
+              "example": 50000
+            },
+            "image_id": {
+              "type": "number",
+              "example": 1
+            },
+            "department_id": {
+              "type": "number",
+              "example": 1
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2024-01-10T07:10:11.684Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2024-01-10T07:10:11.684Z"
+            },
+            "current_highest_price": {
+              "type": "number",
+              "example": 40000
+            }
+          },
+          "required": [
+            "id",
+            "product_name",
+            "user_id",
+            "status",
+            "user_highest_price",
+            "upper_bound",
+            "image_id",
+            "department_id",
+            "created_at",
+            "updated_at",
+            "current_highest_price"
+          ]
+        }
       },
       "ProductsProductsIDResDTO": {
         "type": "object",

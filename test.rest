@@ -1,27 +1,12 @@
-POST http://localhost:3000/product/bidding/give-up/1
+POST http://localhost:3000/products/bidding/give-up/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNDgwMDYyOSwiZXhwIjoxNzA0ODA0MjI5fQ.bi9B5U8IeIM7QvDC2PfyivoFoNJ3-zetonbzcNHz5_4
-
-##tag create
-POST http://localhost:3000/tags/
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNDgwMDYyOSwiZXhwIjoxNzA0ODA0MjI5fQ.bi9B5U8IeIM7QvDC2PfyivoFoNJ3-zetonbzcNHz5_4
-{
-    "productId": 1,
-    "tag": ["good"]
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDM3MDMwLCJleHAiOjE3MDUwNDA2MzB9.Opf2lOdz6SbI8d-U1L35wmtLCBnYyJ_8b7uRRXdL2sU
 
 
 ### bidding
-POST http://localhost:3000/tags
+POST http://localhost:3000/products/bidding/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNTAyNTE5MSwiZXhwIjoxNzA1MDI4NzkxfQ.oh-BDJQ_80nl2rKqBs_HhNzQEc91v0pjX5S5Z9rPIYE
-{
-    "productId": 1,
-    "tag": ["good"]
-}
-
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDM3MDMwLCJleHAiOjE3MDUwNDA2MzB9.Opf2lOdz6SbI8d-U1L35wmtLCBnYyJ_8b7uRRXdL2sU
 
 POST http://localhost:3000/tags
 Content-Type: application/json
@@ -38,10 +23,13 @@ POST http://localhost:3000/auth/sign-up HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "rinothehero@gmail.com",
-    "nickname": "RINO KANG",
-    "password": "310417",
-    "departmentId": 49
+    "email": "hayeongparkkkk@naver.com",
+    "nickname": "TEST1234",
+    "password": "123455",
+    "email": "hayeongparkkkk@naver.com",
+    "nickname": "TEST1234",
+    "password": "123455",
+    "departmentId": 1
 }
 
 ### 로그인 테스트
@@ -50,6 +38,7 @@ POST http://localhost:3000/auth/sign-in HTTP/1.1
 Content-Type: application/json
 
 {
+
     "email": "rinothehero@gmail.com",
     "password": "310417"
 }
@@ -62,6 +51,7 @@ Content-Type: application/json
 ### 상품 등록 테스트
 POST http://localhost:3000/products HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDQyOTAyLCJleHAiOjE3MDUwNDY1MDJ9.n6GfDFyAm-r1Ex5H3bKnu37VmqtllUG2cLlbFN3HfT8
 
 {
     "productName": "테스트 상품",
@@ -76,31 +66,32 @@ Content-Type: application/json
     "department_id": 1
 }
 
+
 ### 현재 사용자 정보 테스트
 
 GET http://localhost:3000/users/current-user HTTP/1.1
 Content-Type: application/json
 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmlja25hbWUiOiJURVNUIiwicGFzc3dvcmQiOiJzaGE1MTI6QmJObnVSSHhnWU9TWXZaOVgyRzVXN3NtSlQ4NVRjQ0VHa0htU3lHS3ZZUT06MjE2NTc5OjY0OmlDM0pnS1E0WW1xRmVDUCtJUHh2R0l3RFZSN1FoUkRuT3F5UUJBRjVQaWhLS2NJQ2ttcHF5eE96ZDhKR2tNSmV5NmM0UVpnb3hrZVVLWDJBc3JIQ09nPT0iLCJpYXQiOjE3MDQ4MDEwMDMsImV4cCI6MTcwNDgwNDYwM30.2IE33RVtiQiE5I7q3hSNezPOGGVRyp7vXCrFTkaAaUs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDM4MjEzLCJleHAiOjE3MDUwNDE4MTN9.SVvhBByvpZ9-0enj2jiyvTBlP89CDs0zfd4F789kXes
 
 
 ### 판매 중인 상품 확인
 
 GET http://localhost:3000/users/current-user/product/sell HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmlja25hbWUiOiJURVNUIiwicGFzc3dvcmQiOiJzaGE1MTI6QmJObnVSSHhnWU9TWXZaOVgyRzVXN3NtSlQ4NVRjQ0VHa0htU3lHS3ZZUT06MjE2NTc5OjY0OmlDM0pnS1E0WW1xRmVDUCtJUHh2R0l3RFZSN1FoUkRuT3F5UUJBRjVQaWhLS2NJQ2ttcHF5eE96ZDhKR2tNSmV5NmM0UVpnb3hrZVVLWDJBc3JIQ09nPT0iLCJpYXQiOjE3MDQ4MDEwMDMsImV4cCI6MTcwNDgwNDYwM30.2IE33RVtiQiE5I7q3hSNezPOGGVRyp7vXCrFTkaAaUs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDM4MjEzLCJleHAiOjE3MDUwNDE4MTN9.SVvhBByvpZ9-0enj2jiyvTBlP89CDs0zfd4F789kXes
 
 ### 상품 상세정보 조회하기
 
-GET http://localhost:3000/products/10 HTTP/1.1
+GET http://localhost:3000/products/2 HTTP/1.1
 Content-Type: application/json
 
 
 ### 상품 상세정보 수정하기
 
-PATCH http://localhost:3000/products/10 HTTP/1.1
+PATCH http://localhost:3000/products/87 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmlja25hbWUiOiJURVNUIiwicGFzc3dvcmQiOiJzaGE1MTI6QmJObnVSSHhnWU9TWXZaOVgyRzVXN3NtSlQ4NVRjQ0VHa0htU3lHS3ZZUT06MjE2NTc5OjY0OmlDM0pnS1E0WW1xRmVDUCtJUHh2R0l3RFZSN1FoUkRuT3F5UUJBRjVQaWhLS2NJQ2ttcHF5eE96ZDhKR2tNSmV5NmM0UVpnb3hrZVVLWDJBc3JIQ09nPT0iLCJpYXQiOjE3MDQ3NzY5NjcsImV4cCI6MTcwNDc4MDU2N30.pXB5SxSjvwgefieXIMmTwzqXZbXjqWeK0qaMzBioXnY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDQyOTAyLCJleHAiOjE3MDUwNDY1MDJ9.n6GfDFyAm-r1Ex5H3bKnu37VmqtllUG2cLlbFN3HfT8
 
 {
     "productName": "Fitness Tracker_UPDATE",
@@ -108,12 +99,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmlja25hb
     "imageId": 5,
     "desc": "track your fitness activities_UPDATE",
     "tradingPlace": "Sports Store",
-    "tradingTime": "7 AM - 3 PM",
+    "tradingTime": "7 AM - 3 PM"
 }
 
 ### 상품 상세정보 삭제하기
 
-DELETE http://localhost:3000/products/10 HTTP/1.1
+DELETE http://localhost:3000/products/84 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmlja25hbWUiOiJURVNUIiwicGFzc3dvcmQiOiJzaGE1MTI6QmJObnVSSHhnWU9TWXZaOVgyRzVXN3NtSlQ4NVRjQ0VHa0htU3lHS3ZZUT06MjE2NTc5OjY0OmlDM0pnS1E0WW1xRmVDUCtJUHh2R0l3RFZSN1FoUkRuT3F5UUJBRjVQaWhLS2NJQ2ttcHF5eE96ZDhKR2tNSmV5NmM0UVpnb3hrZVVLWDJBc3JIQ09nPT0iLCJpYXQiOjE3MDQ4MDEwMDMsImV4cCI6MTcwNDgwNDYwM30.2IE33RVtiQiE5I7q3hSNezPOGGVRyp7vXCrFTkaAaUs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDM4MjEzLCJleHAiOjE3MDUwNDE4MTN9.SVvhBByvpZ9-0enj2jiyvTBlP89CDs0zfd4F789kXes
+
 
