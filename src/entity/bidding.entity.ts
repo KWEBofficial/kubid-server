@@ -1,6 +1,5 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
@@ -8,6 +7,7 @@ import {
 } from 'typeorm';
 import User from './user.entity';
 import Product from './products.entity';
+import { BaseEntity } from './base.entity';
 
 /*
   
@@ -20,7 +20,7 @@ Table bidding {
 }
   */
 @Entity()
-export default class Bidding {
+export default class Bidding extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -37,7 +37,4 @@ export default class Bidding {
   /////////참조를 위해 추가///////////
   @Column()
   price!: number;
-  // TypeORM이 적절한 타입을 자동으로 추론하므로 type 지정 불필요
-  @CreateDateColumn()
-  createdAt!: Date;
 }
