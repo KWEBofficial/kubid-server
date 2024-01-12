@@ -8,44 +8,40 @@ import BiddingService from '../../service/bidding.service';
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
     const searchTerm = req.query.search as string;
+    let products;
 
     if (!searchTerm) {
       //검색어가 없을경우 : 전체 조회
-      const products = await ProductService.getAllProducts();
-
-      const ret = await Promise.all(
-        products.map(async (product) => {
-          const currentHighestPrice =
-            await BiddingService.getHighestPriceByProductId(product.id);
-          return {
-            id: product.id,
-            productName: product.productName,
-            user_id: product.user.id,
-            status: product.status,
-            currentHighestPrice: currentHighestPrice,
-            upperBound: product.upperBound,
-            imageId: product.imageId,
-            departmentId: product.department.id,
-            createdAt: product.createdAt,
-            updatedAt: product.updatedAt,
-          };
-        }),
-      );
-
-      if (!products || !ret)
-        throw new BadRequestError('정보를 불러오는데 실패했어요.');
-
-      res.json(ret);
+      products = await ProductService.getAllProducts();
     } else {
-      //검색어가 있을 경우 : 전체조회
+      //검색어가 있을 경우 : 검색한 항목만 조회
       const searchTerm = req.query.search as string;
-      if (!searchTerm) {
-        return res.status(400).json({ error: '검색어가 필요해요.' });
-      }
-
-      const products = await ProductService.searchProducts(searchTerm);
-      res.json(products);
+      products = await ProductService.searchProducts(searchTerm);
     }
+
+    const ret = await Promise.all(
+      products.map(async (product) => {
+        const currentHighestPrice =
+          await BiddingService.getHighestPriceByProductId(product.id);
+        return {
+          id: product.id,
+          productName: product.productName,
+          user_id: product.user.id,
+          status: product.status,
+          currentHighestPrice: currentHighestPrice,
+          upperBound: product.upperBound,
+          imageId: product.imageId,
+          departmentId: product.department.id,
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt,
+        };
+      }),
+    );
+
+    if (!products || !ret)
+      throw new BadRequestError('정보를 불러오는데 실패했어요.');
+
+    res.json(ret);
   } catch (error) {
     next(error);
   }

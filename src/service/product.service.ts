@@ -42,10 +42,17 @@ export default class ProductService {
 
   // 상품 검색
   static async searchProducts(searchTerm: string): Promise<Product[]> {
-    return ProductRepository.find({
-      where: {
-        productName: Like(`%${searchTerm}%`),
-      },
-    });
+    try {
+      return await ProductRepository.find({
+        where: {
+          productName: Like(`%${searchTerm}%`),
+        },
+        relations: ['user', 'department'],
+      });
+    } catch (error) {
+      throw new InternalServerError(
+        '검색한 상품 목록을 불러오는데 실패했어요.',
+      );
+    }
   }
 }
