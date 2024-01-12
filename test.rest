@@ -2,13 +2,33 @@ POST http://localhost:3000/product/bidding/give-up/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNDgwMDYyOSwiZXhwIjoxNzA0ODA0MjI5fQ.bi9B5U8IeIM7QvDC2PfyivoFoNJ3-zetonbzcNHz5_4
 
-### bidding
-POST http://localhost:3000/product/bidding/1
+##tag create
+POST http://localhost:3000/tags/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNDgwMDYyOSwiZXhwIjoxNzA0ODA0MjI5fQ.bi9B5U8IeIM7QvDC2PfyivoFoNJ3-zetonbzcNHz5_4
-
 {
-    "biddingPrice": 3200
+    "productId": 1,
+    "tag": ["good"]
+}
+
+
+### bidding
+POST http://localhost:3000/tags
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNTAyNTE5MSwiZXhwIjoxNzA1MDI4NzkxfQ.oh-BDJQ_80nl2rKqBs_HhNzQEc91v0pjX5S5Z9rPIYE
+{
+    "productId": 1,
+    "tag": ["good"]
+}
+
+
+
+POST http://localhost:3000/tags
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwibmlja25hbWUiOiJSSU5PIEtBTkciLCJwYXNzd29yZCI6InNoYTUxMjovMW8wQkhrQVM3a0tIdlVnTVEwSSt2R016Ums0THNiQ3U0ZzZSek9PM01zPToyMTE4NDk6NjQ6L1k2eG5PRitnb0ljUW9odjdBbnZhZ0VNNmpjUEp2VGVCbGx4aFZzTzRSVkE5R3JEaE5PU0ZWRUdzRkJhM2VYemd6T3VZSmZLTmFLall3QnVmTEp6L2c9PSIsImlhdCI6MTcwNTAyNTE5MSwiZXhwIjoxNzA1MDI4NzkxfQ.oh-BDJQ_80nl2rKqBs_HhNzQEc91v0pjX5S5Z9rPIYE
+{
+    "productId": 1,
+    "tag": ["good"]
 }
 
 
@@ -32,7 +52,7 @@ Content-Type: application/json
 {
     "email": "rinothehero@gmail.com",
     "password": "310417"
-
+}
 
 ### 상품 목록 조회 테스트
 GET http://localhost:3000/products HTTP/1.1
@@ -45,15 +65,15 @@ Content-Type: application/json
 
 {
     "productName": "테스트 상품",
-    "userId": 1, // 가정: 사용자 ID는 1번이라고 가정합니다.
+    "userId": 1,
     "desc": "이것은 테스트 상품의 설명입니다.",
-    "status": "progress", // progress, complete
-    "lowerBound": 1000, // 최소 가격
-    "upperBound": 5000, // 최대 가격
-    "imageId": 1, // 가정: 이미지 ID는 1번이라고 가정합니다.
+    "status": "progress",
+    "lowerBound": 1000,
+    "upperBound": 5000,
+    "imageId": 1,
     "tradingPlace": "서울시 강남구",
-    "tradingTime": "2024-01-10T15:00:00", // 거래 시간
-    "department_id": 1 // 가정: 부서 ID는 1번이라고 가정합니다.
+    "tradingTime": "2024-01-10T15:00:00",
+    "department_id": 1
 }
 
 ### 현재 사용자 정보 테스트
