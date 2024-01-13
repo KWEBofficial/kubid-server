@@ -7,8 +7,9 @@ import router from './controller/router';
 import errorHandler from './util/errorHandler';
 import passport from 'passport';
 import { passportConfigFunc } from './passport';
-const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('../swagger-output.json');
+import swaggerUi from 'swagger-ui-express';
+import swaggerFile from '../swagger-output.json';
+
 const PORT = Number(process.env.PORT) || 3000;
 
 const app = express();
