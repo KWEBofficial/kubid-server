@@ -136,20 +136,15 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-// 검색어가 있으면 상품 검색, 검색어가 없으면 상품 전체 조회
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
-    const searchTerm = req.query.search as string;
-    let products;
-
-    if (!searchTerm) {
-      //검색어가 없을경우 : 전체 조회
-      products = await ProductService.getAllProducts();
-    } else {
-      //검색어가 있을 경우 : 검색한 항목만 조회
-      const searchTerm = req.query.search as string;
-      products = await ProductService.searchProducts(searchTerm);
-    }
+    const { search, sort, page, pageSize } = req.query;
+    const products = await ProductService.getProducts({
+      search: search as string | undefined,
+      isRecentOrdered: sort === 'recent',
+      page: Number(page) > 0 ? Number(page) : undefined,
+      limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+    });
 
     const ret = await Promise.all(
       products.map(async (product) => {
@@ -161,6 +156,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
           user_id: product.user.id,
           status: product.status,
           currentHighestPrice: currentHighestPrice,
+          lowerBound: product.lowerBound,
           upperBound: product.upperBound,
           imageId: product.imageId,
           departmentId: product.department.id,
@@ -179,23 +175,6 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
-/*
-// 상품 검색
-export const searchProducts: RequestHandler = async (req, res) => {
-  try {
-    const searchTerm = req.query.search as string;
-    if (!searchTerm) {
-      return res.status(400).json({ error: '검색어가 필요해요.' });
-    }
-
-    const products = await ProductService.searchProducts(searchTerm);
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ error: '서버 오류가 발생했어요.' });
-  }
-};
-*/
-//상품 등록하기
 export const createProduct: RequestHandler = async (req, res) => {
   try {
     const productData: CreateProductDTO = req.body;

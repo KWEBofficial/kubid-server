@@ -6,6 +6,8 @@ import UpdateProductDTO from '../type/product/update.input';
 import UserService from './user.service';
 import { InternalServerError } from '../util/customErrors';
 import { Status } from '../type/product/createproduct.dto';
+import { GetProductsOption } from '../type/product/get.products.option';
+
 export default class ProductService {
   //상품 등록하기
   static async createProduct(productData: CreateProductDTO): Promise<Product> {
@@ -80,38 +82,26 @@ export default class ProductService {
       throw new InternalServerError('제품을 취소하지 못했어요.');
     }
   }
-  //모든 상품 조회
-  static async getAllProducts(): Promise<Product[]> {
+
+  static async getProducts(
+    getProductsOption: GetProductsOption,
+  ): Promise<Product[]> {
     try {
+      const { search, isRecentOrdered, page, limit } = getProductsOption;
+      const skip =
+        page !== undefined && limit !== undefined
+          ? (page - 1) * limit
+          : undefined;
+
       return await ProductRepository.find({
+        where: search ? { productName: Like(`%${search}%`) } : undefined,
         relations: ['user', 'department'],
+        skip: skip,
+        take: limit,
+        order: isRecentOrdered ? { createdAt: 'DESC' } : undefined,
       });
     } catch (error) {
-      throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
-    }
-  }
-
-  //페이징
-  static async findProducts(page: number, limit: number): Promise<Product[]> {
-    const skip = (page - 1) * limit;
-    return ProductRepository.find({
-      skip: skip,
-      take: limit,
-    });
-  }
-
-  // 상품 검색
-  static async searchProducts(searchTerm: string): Promise<Product[]> {
-    try {
-      return await ProductRepository.find({
-        where: {
-          productName: Like(`%${searchTerm}%`),
-        },
-      });
-    } catch (error) {
-      throw new InternalServerError(
-        '검색한 상품 목록을 불러오는데 실패했어요.',
-      );
+      throw new InternalServerError('상품 목록을 조회하지 못했어요.');
     }
   }
 

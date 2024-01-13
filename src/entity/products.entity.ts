@@ -58,7 +58,7 @@ export default class Product extends BaseEntity {
   upperBound!: number;
 
   @OneToOne(() => Image)
-  @JoinColumn({ name: 'id' })
+  @JoinColumn({ name: 'image_id' })
   imageId!: number;
 
   @Column()
