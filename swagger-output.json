@@ -273,6 +273,166 @@
         }
       }
     },
+    "/products/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "모든 상품 목록 반환",
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResDTO"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/{productId}/bidding": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "biddingPrice": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/bidding/give-up/{productId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/products/bidding/{productId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "biddingPrice": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/products/{productId}": {
       "get": {
         "description": "",
@@ -368,6 +528,103 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        }
+      }
+    },
+    "/tags/": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "example": "any"
+                  },
+                  "tag": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags/{tagId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "tagId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/image/prepare-upload": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/image/upload": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -742,6 +999,91 @@
           "created_at",
           "updated_at"
         ]
+      },
+      "ProductReqDTO": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "example": "전공책"
+          }
+        },
+        "required": [
+          "search"
+        ]
+      },
+      "ProductResDTO": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 1
+            },
+            "product_name": {
+              "type": "string",
+              "example": "[급처] 판매 중"
+            },
+            "user_id": {
+              "type": "number",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "example": "progress"
+            },
+            "lower_bound": {
+              "type": "number",
+              "example": 5000
+            },
+            "upper_bound": {
+              "type": "number",
+              "example": 10000
+            },
+            "image": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "image_url": {
+                  "type": "string",
+                  "example": "http://localhost:3000/1"
+                }
+              },
+              "required": [
+                "id",
+                "image_url"
+              ]
+            },
+            "department_id": {
+              "type": "number",
+              "example": 1
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2024-01-04T00:00:00.000Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2024-01-04T00:00:00.000Z"
+            }
+          },
+          "required": [
+            "id",
+            "product_name",
+            "user_id",
+            "status",
+            "lower_bound",
+            "upper_bound",
+            "image",
+            "department_id",
+            "created_at",
+            "updated_at"
+          ]
+        }
       }
     }
   }
