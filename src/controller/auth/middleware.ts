@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../../util/customErrors';
