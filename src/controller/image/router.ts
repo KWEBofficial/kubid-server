@@ -1,15 +1,18 @@
 import { Router } from 'express';
 import { prepareUpload, uploadImage } from './controller';
 import multer from 'multer';
+import fs from 'fs';
 
 const router = Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'images/');
+    const dir = 'images/';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
-    console.log(req.body.id);
     cb(null, `${req.body.id}.${file.mimetype.split('/')[1]}`);
   },
 });
