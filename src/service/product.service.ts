@@ -6,7 +6,10 @@ import UpdateProductDTO from '../type/product/update.input';
 import UserService from './user.service';
 import { InternalServerError } from '../util/customErrors';
 import { Status } from '../type/product/createproduct.dto';
-import { GetProductsOption } from '../type/product/get.products.option';
+import {
+  GetPopularProductsOption,
+  GetProductsOption,
+} from '../type/product/get.products.option';
 
 export default class ProductService {
   //상품 등록하기
@@ -83,11 +86,9 @@ export default class ProductService {
     }
   }
 
-  static async getProducts(
-    getProductsOption: GetProductsOption,
-  ): Promise<Product[]> {
+  static async getProducts(option: GetProductsOption): Promise<Product[]> {
     try {
-      const { search, isRecentOrdered, page, limit } = getProductsOption;
+      const { search, isRecentOrdered, page, limit } = option;
       const skip =
         page !== undefined && limit !== undefined
           ? (page - 1) * limit
@@ -102,6 +103,44 @@ export default class ProductService {
       });
     } catch (error) {
       throw new InternalServerError('상품 목록을 조회하지 못했어요.');
+    }
+  }
+
+  static async getPopularProducts(
+    option: GetPopularProductsOption,
+  ): Promise<Product[]> {
+    try {
+      const { search, page, limit } = option;
+      const skip =
+        page !== undefined && limit !== undefined
+          ? (page - 1) * limit
+          : undefined;
+      return await ProductRepository.createQueryBuilder('product')
+        .select([
+          'product.id as id',
+          'product.product_name',
+          'product.user_id',
+          'product.status as status',
+          'MAX(bidding.price) as current_highest_price',
+          'product.upper_bound',
+          'product.lower_bound',
+          'product.image_id',
+          'product.department_id',
+          'product.created_at',
+          'product.updated_at',
+          'product.product_name',
+          'COUNT(DISTINCT bidding.user_id) as bidder_count',
+        ])
+        .innerJoin('bidding', 'bidding', 'product.id = bidding.product_id')
+        .where('product.status = :status', { status: Status.Progress })
+        .andWhere('product.product_name LIKE :name', { name: `%${search}%` })
+        .groupBy('product.id')
+        .orderBy('bidder_count', 'DESC')
+        .offset(skip)
+        .limit(limit)
+        .getRawMany();
+    } catch (error) {
+      throw new InternalServerError('인기 상품 목록을 조회하지 못했어요.');
     }
   }
 

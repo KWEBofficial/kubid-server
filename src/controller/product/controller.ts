@@ -175,6 +175,20 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const getPopularProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const { search, page, pageSize } = req.query;
+    const products = await ProductService.getPopularProducts({
+      search: search as string | undefined,
+      page: Number(page) > 0 ? Number(page) : undefined,
+      limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+    });
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createProduct: RequestHandler = async (req, res) => {
   try {
     const productData: CreateProductDTO = req.body;

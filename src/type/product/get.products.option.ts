@@ -4,3 +4,9 @@ export interface GetProductsOption {
   page?: number;
   limit?: number;
 }
+
+export interface GetPopularProductsOption {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
