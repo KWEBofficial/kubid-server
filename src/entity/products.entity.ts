@@ -4,11 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import User from './user.entity';
 import Department from './department.entity';
 import { BaseEntity } from './base.entity';
-
+import Image from './image.entity';
 /*
 Table product {
   id integer [primary key]
@@ -56,7 +57,8 @@ export default class Product extends BaseEntity {
   @Column()
   upperBound!: number;
 
-  @Column()
+  @OneToOne(() => Image)
+  @JoinColumn({ name: 'id' })
   imageId!: number;
 
   @Column()
