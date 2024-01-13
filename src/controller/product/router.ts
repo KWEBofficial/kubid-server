@@ -1,7 +1,8 @@
 import { Router } from 'express';
+
 import { decodeToken } from '../auth/middleware';
 import {
-  getAllProducts,
+  getProducts,
   getProductDetail,
   updateProductDetail,
   deleteProduct,
@@ -12,7 +13,7 @@ import {
 
 const productRouter = Router();
 
-productRouter.get('', getAllProducts);
+productRouter.get('', getProducts);
 productRouter.post('', decodeToken, createProduct);
 productRouter.post('/:productId/bidding', decodeToken, bidProduct);
 productRouter.post('/bidding/give-up/:productId', decodeToken, giveUpBidding);

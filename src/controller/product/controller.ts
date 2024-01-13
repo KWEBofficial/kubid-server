@@ -136,9 +136,20 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getAllProducts: RequestHandler = async (req, res, next) => {
+// 검색어가 있으면 상품 검색, 검색어가 없으면 상품 전체 조회
+export const getProducts: RequestHandler = async (req, res, next) => {
   try {
-    const products = await ProductService.getAllProducts();
+    const searchTerm = req.query.search as string;
+    let products;
+
+    if (!searchTerm) {
+      //검색어가 없을경우 : 전체 조회
+      products = await ProductService.getAllProducts();
+    } else {
+      //검색어가 있을 경우 : 검색한 항목만 조회
+      const searchTerm = req.query.search as string;
+      products = await ProductService.searchProducts(searchTerm);
+    }
 
     const ret = await Promise.all(
       products.map(async (product) => {
@@ -168,6 +179,22 @@ export const getAllProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
+/*
+// 상품 검색
+export const searchProducts: RequestHandler = async (req, res) => {
+  try {
+    const searchTerm = req.query.search as string;
+    if (!searchTerm) {
+      return res.status(400).json({ error: '검색어가 필요해요.' });
+    }
+
+    const products = await ProductService.searchProducts(searchTerm);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: '서버 오류가 발생했어요.' });
+  }
+};
+*/
 //상품 등록하기
 export const createProduct: RequestHandler = async (req, res) => {
   try {

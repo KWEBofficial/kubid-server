@@ -1,5 +1,6 @@
 import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
+import { Like } from 'typeorm';
 import CreateProductDTO from '../type/product/createproduct.dto';
 import UpdateProductDTO from '../type/product/update.input';
 import UserService from './user.service';
@@ -26,6 +27,7 @@ export default class ProductService {
         tradingTime: productData.tradingTime,
         status: Status.Progress,
       };
+      console.log(CreateProductDAO);
 
       const product = ProductRepository.create(CreateProductDAO);
       return await ProductRepository.save(product);
@@ -78,7 +80,7 @@ export default class ProductService {
       throw new InternalServerError('제품을 취소하지 못했어요.');
     }
   }
-  //모든 상품 찾기
+  //모든 상품 조회
   static async getAllProducts(): Promise<Product[]> {
     try {
       return await ProductRepository.find({
@@ -96,6 +98,21 @@ export default class ProductService {
       skip: skip,
       take: limit,
     });
+  }
+
+  // 상품 검색
+  static async searchProducts(searchTerm: string): Promise<Product[]> {
+    try {
+      return await ProductRepository.find({
+        where: {
+          productName: Like(`%${searchTerm}%`),
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError(
+        '검색한 상품 목록을 불러오는데 실패했어요.',
+      );
+    }
   }
 
   static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
