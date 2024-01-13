@@ -280,6 +280,16 @@
         ],
         "summary": "모든 상품 목록 반환",
         "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -988,6 +998,18 @@
           "department_id",
           "created_at",
           "updated_at"
+        ]
+      },
+      "ProductReqDTO": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "example": "전공책"
+          }
+        },
+        "required": [
+          "search"
         ]
       },
       "ProductResDTO": {

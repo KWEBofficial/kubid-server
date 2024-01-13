@@ -158,6 +158,11 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   #swagger.auto = false;
   #swagger.tags = ['Product'];
   #swagger.summary = '모든 상품 목록 반환';
+  #swagger.parameters['search'] = {
+    in: 'query',
+    required: false,
+    type: 'string',
+  },
   #swagger.responses[200] = {
     content: {
       'application/json': {
@@ -187,7 +192,6 @@ export const getProducts: RequestHandler = async (req, res, next) => {
           await BiddingService.getHighestPriceByProductId(product.id);
         const image = await ImageService.getImageById(product.imageId);
 
-        console.log(image);
         return {
           id: product.id,
           productName: product.productName,
