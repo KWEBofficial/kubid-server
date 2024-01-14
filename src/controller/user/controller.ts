@@ -36,11 +36,11 @@ export const getUser: RequestHandler = async (req, res, next) => {
     if (!userId) throw new BadRequestError('temp');
     const user = await UserService.getUserById(userId);
     if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
-    res.json({
+    res.status(200).json({
       id: user.id,
       email: user.email,
       nickname: user.nickname,
-      departmentId: user.department,
+      departmentId: user.department.id,
       createdAt: user.createdAt,
     });
   } catch (error) {
