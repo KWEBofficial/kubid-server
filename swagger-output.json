@@ -647,6 +647,42 @@
         }
       }
     },
+    "/tags/": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "example": "any"
+                  },
+                  "tag": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tags/{tagId}": {
       "delete": {
         "description": "",
@@ -1149,6 +1185,148 @@
             "departmentId",
             "createdAt",
             "updatedAt"
+          ]
+        }
+      },
+      "ProductsProductsIDResDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "product_name": {
+            "type": "string",
+            "example": "[급처] 판매 중"
+          },
+          "user_id": {
+            "type": "number",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "example": "progress"
+          },
+          "lower_bound": {
+            "type": "number",
+            "example": 5000
+          },
+          "upper_bound": {
+            "type": "number",
+            "example": 10000
+          },
+          "image_id": {
+            "type": "number",
+            "example": 1
+          },
+          "department_id": {
+            "type": "number",
+            "example": 1
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2024-01-04T00:00:00.000Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2024-01-04T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "product_name",
+          "user_id",
+          "status",
+          "lower_bound",
+          "upper_bound",
+          "image_id",
+          "department_id",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "ProductReqDTO": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "example": "전공책"
+          }
+        },
+        "required": [
+          "search"
+        ]
+      },
+      "ProductResDTO": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 1
+            },
+            "product_name": {
+              "type": "string",
+              "example": "[급처] 판매 중"
+            },
+            "user_id": {
+              "type": "number",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "example": "progress"
+            },
+            "lower_bound": {
+              "type": "number",
+              "example": 5000
+            },
+            "upper_bound": {
+              "type": "number",
+              "example": 10000
+            },
+            "image": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "image_url": {
+                  "type": "string",
+                  "example": "http://localhost:3000/1"
+                }
+              },
+              "required": [
+                "id",
+                "image_url"
+              ]
+            },
+            "department_id": {
+              "type": "number",
+              "example": 1
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2024-01-04T00:00:00.000Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2024-01-04T00:00:00.000Z"
+            }
+          },
+          "required": [
+            "id",
+            "product_name",
+            "user_id",
+            "status",
+            "lower_bound",
+            "upper_bound",
+            "image",
+            "department_id",
+            "created_at",
+            "updated_at"
           ]
         }
       }

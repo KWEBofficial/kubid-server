@@ -4,7 +4,7 @@ import { createTag, deleteTag } from './controller';
 
 const tagRouter = Router();
 
-tagRouter.post('', decodeToken, createTag);
+tagRouter.post('/', decodeToken, createTag);
 tagRouter.delete('/:tagId', decodeToken, deleteTag);
 
 export default tagRouter;

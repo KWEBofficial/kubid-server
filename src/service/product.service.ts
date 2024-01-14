@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Product from '../entity/products.entity';
 import ProductRepository from '../repository/product.repository';
 import { Like } from 'typeorm';

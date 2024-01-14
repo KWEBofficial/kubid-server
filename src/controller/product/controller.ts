@@ -7,6 +7,8 @@ import UserService from '../../service/user.service';
 import UpdateProductDTO from '../../type/product/update.input';
 import CreateProductDTO from '../../type/product/createproduct.dto';
 import errorHandler from '../../util/errorHandler';
+import ImageService from '../../service/image.service';
+import { ImageDTO } from '../../type/image/image.dto';
 
 export const getProductDetail: RequestHandler = async (req, res, next) => {
   try {
@@ -19,12 +21,14 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
     }
     const maxPrice = await BiddingService.getHighestPriceByProductId(productId);
     const tagsById = await TagService.getTagsById(productId);
+    const image = await ImageService.getImageById(product.imageId);
+
     res.status(200).json({
       id: product.id,
       productName: product.productName,
       upperBound: product.upperBound,
       currentHighestPrice: maxPrice,
-      imageId: product.imageId,
+      image: image,
       desciption: product.desc,
       tags: tagsById,
       tradeLocation: product.tradingPlace,
@@ -99,7 +103,19 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
       productId,
       updateProductDTO,
     );
-    res.status(200).json(updatedProduct);
+    if (!updatedProduct)
+      throw new InternalServerError('알 수 없는 에러가 발생했어요.');
+
+    const image: ImageDTO = await ImageService.getImageById(
+      updatedProduct.imageId,
+    );
+
+    const ret = {
+      ...updatedProduct,
+      image,
+    };
+
+    res.status(200).json(ret);
   } catch (error) {
     next(error);
   }
@@ -188,6 +204,8 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       products.map(async (product) => {
         const currentHighestPrice =
           await BiddingService.getHighestPriceByProductId(product.id);
+        const image = await ImageService.getImageById(product.imageId);
+
         return {
           id: product.id,
           productName: product.productName,
@@ -196,7 +214,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
           currentHighestPrice: currentHighestPrice,
           lowerBound: product.lowerBound,
           upperBound: product.upperBound,
-          imageId: product.imageId,
+          image: image,
           departmentId: product.department.id,
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,

@@ -141,6 +141,38 @@ const doc = {
           $updatedAt: '2024-01-13T14:33:28.396Z',
         },
       ],
+      ProductsProductsIDResDTO: {
+        $id: 1,
+        $product_name: '[급처] 판매 중',
+        $user_id: 1,
+        $status: 'progress',
+        $lower_bound: 5000,
+        $upper_bound: 10000,
+        $image_id: 1,
+        $department_id: 1,
+        $created_at: '2024-01-04T00:00:00.000Z',
+        $updated_at: '2024-01-04T00:00:00.000Z',
+      },
+      ProductReqDTO: {
+        $search: '전공책',
+      },
+      ProductResDTO: [
+        {
+          $id: 1,
+          $product_name: '[급처] 판매 중',
+          $user_id: 1,
+          $status: 'progress',
+          $lower_bound: 5000,
+          $upper_bound: 10000,
+          $image: {
+            $id: 1,
+            $image_url: 'http://localhost:3000/1',
+          },
+          $department_id: 1,
+          $created_at: '2024-01-04T00:00:00.000Z',
+          $updated_at: '2024-01-04T00:00:00.000Z',
+        },
+      ],
     },
   },
 };

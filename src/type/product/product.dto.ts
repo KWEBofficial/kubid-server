@@ -1,3 +1,5 @@
+import { ImageDTO } from '../image/image.dto';
+
 export enum Status {
   Progress = 'progress',
   Complete = 'complete',
@@ -10,7 +12,7 @@ export interface ProductDTO {
   status: Status;
   currentHighestPrice: number;
   upperBound: number;
-  imageId: number;
+  image: ImageDTO;
   tags: string[];
   tradeLocation: string;
   tradeDate: string;
