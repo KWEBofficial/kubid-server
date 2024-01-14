@@ -48,7 +48,7 @@ export const getUser: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateUser: RequestHandler = async (req, res, next) => {
+export const updateUserPassword: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
   #swagger.summary = '현재 로그인 유저 정보 수정';
@@ -89,17 +89,17 @@ export const updateUser: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
 
-    const { password, nickname } = req.body as UpdateUserDTO;
-    if (!password) throw new BadRequestError('비밀번호를 입력해 주세요.');
-    if (!nickname) throw new BadRequestError('닉네임을 입력해 주세요.');
+    const { password } = req.body as UpdateUserDTO;
+    if (!password)
+      throw new BadRequestError('새로운 비밀번호를 입력해 주세요.');
 
     const hashedPassword = await generateHashedPassword(password);
-    const updateUserDTO: UpdateUserDTO = { password: hashedPassword, nickname };
+    const updateUserDTO: UpdateUserDTO = {
+      password: hashedPassword,
+    };
 
-    const { email, department, createdAt } = await UserService.updateUser(
-      userId,
-      updateUserDTO,
-    );
+    const { email, department, createdAt, nickname } =
+      await UserService.updateUser(userId, updateUserDTO);
 
     const userResponse = {
       userId,

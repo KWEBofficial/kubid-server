@@ -123,6 +123,7 @@ export const signIn: RequestHandler = async (req, res) => {
     // local로 등록한 인증과정 실행
     passport.authenticate(
       'local',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (passportError: Error, user: User, info: any) => {
         if (info instanceof UnauthorizedError) {
           const errorMessage = JSON.parse(info.message);
@@ -162,11 +163,11 @@ export const signIn: RequestHandler = async (req, res) => {
           }
           // 클라이언트에게 JWT 생성 후 반환
           const token = jwt.sign(
-            { id: user.id, nickname: user.nickname, password: user.password },
+            { id: user.id, email: user.email, password: user.password },
             process.env.JWT_SECRET_KEY,
             { expiresIn: '1h' },
           );
-          res.json({ token });
+          res.status(200).json({ token });
         });
       },
     )(req, res);
