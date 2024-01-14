@@ -9,6 +9,8 @@ import CreateProductDTO from '../../type/product/createproduct.dto';
 import errorHandler from '../../util/errorHandler';
 import ImageService from '../../service/image.service';
 import { ImageDTO } from '../../type/image/image.dto';
+import { GetPopularProductsResult } from '../../type/product/get.popular.products.result';
+import Product from '../../entity/products.entity';
 
 export const getProductDetail: RequestHandler = async (req, res, next) => {
   try {
@@ -157,32 +159,39 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['Product'];
   #swagger.summary = "상품 조회 및 검색";
+  #swagger.description = "그냥 상품 조회, 최근 상품 조회, 인기 상품 조회, 검색, 페이징 등을 쿼리로 조정해서 사용할 수 있습니다."
   #swagger.parameters['search'] = {
     in: 'query',                                     
     required: false,                     
     type: "string",
-    description: "GET /products?search=공책 : \'공책\'으로 상품 검색",                       
+    description: "검색어",                       
   };
   #swagger.parameters['sort'] = {
     in: 'query',                                     
     required: false,                     
     type: "string",
-    description: "GET /products?sort=recent : 모든 상품을 최근 올라온 순서대로 조회 (이외의 값은 상품 id 순)",                       
+    description: 'sort=recent: 최근, sort=popular: 인기 (현재 판매 중인 상품 중에서, 입찰자 많은 순으로), 이외: 정렬 없음 (상품 id 순)',                       
+  };
+  #swagger.parameters['departmentId'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: 'sort=popular일 때만 사용 가능. ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로',                       
   };
   #swagger.parameters['page'] = {
     in: 'query',                                     
     required: false,                     
     type: "number",
-    description: "",                       
+    description: "페이지 번호",                       
   };
   #swagger.parameters['pageSize'] = {
     in: 'query',                                     
     required: false,                     
     type: "number",
-    description: "GET /products?page=1&pageSize=5 : 모든 상품 조회 (1페이지, 최대 5개)",                       
+    description: "페이지당 상품 개수",                       
   };
   #swagger.responses[200] = {
-    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.',
+    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다. `bidderCount`는 `sort=popular`일 경우에만, `departmentBidderCount`는 `sort=popular&departmentId=?`일 때만 반환됩니다',
     content: {
       'application/json': {
         schema: {
@@ -193,30 +202,53 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   };
   */
   try {
-    const { search, sort, page, pageSize } = req.query;
-    const products = await ProductService.getProducts({
-      search: search as string | undefined,
-      isRecentOrdered: sort === 'recent',
-      page: Number(page) > 0 ? Number(page) : undefined,
-      limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
-    });
+    const { search, sort, page, pageSize, departmentId } = req.query;
+    let products: Product[] | GetPopularProductsResult[];
+
+    if (sort === 'popular') {
+      products = await ProductService.getPopularProducts({
+        search: search as string | undefined,
+        departmentId:
+          Number(departmentId) > 0 ? Number(departmentId) : undefined,
+        page: Number(page) > 0 ? Number(page) : undefined,
+        limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+      });
+    } else {
+      products = await ProductService.getProducts({
+        search: search as string | undefined,
+        isRecentOrdered: sort === 'recent',
+        page: Number(page) > 0 ? Number(page) : undefined,
+        limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+      });
+    }
 
     const ret = await Promise.all(
-      products.map(async (product) => {
+      products.map(async (product: Product | GetPopularProductsResult) => {
         const currentHighestPrice =
           await BiddingService.getHighestPriceByProductId(product.id);
-        const image = await ImageService.getImageById(product.image.id);
+        const image = await ImageService.getImageById(
+          'image' in product ? product.image.id : product.imageId,
+        );
 
         return {
           id: product.id,
           productName: product.productName,
-          userId: product.user.id,
+          userId: 'user' in product ? product.user.id : product.userId,
           status: product.status,
+          bidderCount:
+            'bidderCount' in product ? product.bidderCount : undefined,
+          departmentBidderCount:
+            'departmentBidderCount' in product
+              ? product.departmentBidderCount
+              : undefined,
           currentHighestPrice: currentHighestPrice,
           lowerBound: product.lowerBound,
           upperBound: product.upperBound,
           image: image,
-          departmentId: product.department.id,
+          departmentId:
+            'department' in product
+              ? product.department.id
+              : product.departmentId,
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,
         };
@@ -225,90 +257,6 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 
     res.json(ret);
   } catch (error) {
-    next(error);
-  }
-};
-
-export const getPopularProducts: RequestHandler = async (req, res, next) => {
-  /*
-  #swagger.tags = ['Product'];
-  #swagger.summary = "인기 상품 조회 및 검색";
-  #swagger.description = "현재 판매 중(`progress`)인 상품 중에서, 입찰자가 많은 순으로 상품을 가져옵니다."
-  #swagger.parameters['search'] = {
-    in: 'query',                                     
-    required: false,                     
-    type: "string",
-    description: "GET /products/popular?search=공책 : \'공책\'으로 인기 상품 검색",                       
-  };
-  #swagger.parameters['departmentId'] = {
-    in: 'query',                                     
-    required: false,                     
-    type: "number",
-    description: "GET /products/popular?departmentId=1 : 경영학과(departmentId = 1) 입찰자가 가장 많은 순으로 상품 조회",                       
-  };
-  #swagger.parameters['page'] = {
-    in: 'query',                                     
-    required: false,                     
-    type: "number",
-    description: "",                       
-  };
-  #swagger.parameters['pageSize'] = {
-    in: 'query',                                     
-    required: false,                     
-    type: "number",
-    description: "GET /products/popular?page=1&pageSize=5 : 인기 상품 조회 (1페이지, 최대 5개)",                       
-  };
-  #swagger.responses[200] = {
-    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다. `departmentId` 쿼리를 주지 않을 경우 응답에 `departmentBidderCount`는 포함되지 않습니다.',
-    content: {
-      'application/json': {
-        schema: {
-        oneOf: [
-          {
-            $ref: '#/components/schemas/GetPopularProductsResDTO',
-          },
-        ]
-        },
-      },
-    },
-  };
-  */
-  try {
-    const { search, departmentId, page, pageSize } = req.query;
-    const products = await ProductService.getPopularProducts({
-      search: search as string | undefined,
-      departmentId: Number(departmentId) > 0 ? Number(departmentId) : undefined,
-      page: Number(page) > 0 ? Number(page) : undefined,
-      limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
-    });
-
-    const ret = await Promise.all(
-      products.map(async (product: any) => {
-        const currentHighestPrice =
-          await BiddingService.getHighestPriceByProductId(product.id);
-        const image = await ImageService.getImageById(product.imageId);
-
-        return {
-          id: product.id,
-          productName: product.productName,
-          userId: product.userId,
-          status: product.status,
-          bidderCount: product.bidderCount,
-          departmentBidderCount: product.departmentBidderCount,
-          currentHighestPrice: currentHighestPrice,
-          lowerBound: product.lowerBound,
-          upperBound: product.upperBound,
-          image: image,
-          departmentId: product.departmentId,
-          createdAt: product.createdAt,
-          updatedAt: product.updatedAt,
-        };
-      }),
-    );
-
-    res.json(ret);
-  } catch (error) {
-    console.error(error);
     next(error);
   }
 };

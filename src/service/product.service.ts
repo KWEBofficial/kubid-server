@@ -13,6 +13,7 @@ import {
 } from '../type/product/get.products.option';
 import ImageService from './image.service';
 import BiddingService from './bidding.service';
+import { GetPopularProductsResult } from '../type/product/get.popular.products.result';
 
 export default class ProductService {
   //상품 등록하기
@@ -122,7 +123,7 @@ export default class ProductService {
 
   static async getPopularProducts(
     option: GetPopularProductsOption,
-  ): Promise<Product[]> {
+  ): Promise<GetPopularProductsResult[]> {
     try {
       const { search, departmentId, page, limit } = option;
       const skip =
