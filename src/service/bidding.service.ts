@@ -64,4 +64,23 @@ export default class BiddingService {
       throw new InternalServerError('상품의 입찰을 포기하지 못했어요.');
     }
   }
+
+  static async getBidderCountByProductId(productId: number): Promise<number> {
+    try {
+      const bid = await BiddingRepository.createQueryBuilder('bidding')
+        .select('COUNT(DISTINCT bidding.user_id) as bidderCount')
+        .innerJoin(
+          'product',
+          'product',
+          `product.id = bidding.product_id AND product.id = ${productId}`,
+        )
+        .getRawOne();
+
+      return Number(bid.bidderCount);
+    } catch (error) {
+      throw new InternalServerError(
+        '해당 상품의 입찰자 수를 가져오지 못했어요.',
+      );
+    }
+  }
 }

@@ -259,11 +259,15 @@ export const getPopularProducts: RequestHandler = async (req, res, next) => {
     description: "GET /products/popular?page=1&pageSize=5 : 인기 상품 조회 (1페이지, 최대 5개)",                       
   };
   #swagger.responses[200] = {
-    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.',
+    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다. `departmentId` 쿼리를 주지 않을 경우 응답에 `departmentBidderCount`는 포함되지 않습니다.',
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/GetPopularProductsResDTO',
+        oneOf: [
+          {
+            $ref: '#/components/schemas/GetPopularProductsResDTO',
+          },
+        ]
         },
       },
     },
@@ -290,6 +294,7 @@ export const getPopularProducts: RequestHandler = async (req, res, next) => {
           userId: product.userId,
           status: product.status,
           bidderCount: product.bidderCount,
+          departmentBidderCount: product.departmentBidderCount,
           currentHighestPrice: currentHighestPrice,
           lowerBound: product.lowerBound,
           upperBound: product.upperBound,

@@ -12,6 +12,7 @@ import {
   GetProductsOption,
 } from '../type/product/get.products.option';
 import ImageService from './image.service';
+import BiddingService from './bidding.service';
 
 export default class ProductService {
   //상품 등록하기
@@ -164,18 +165,26 @@ export default class ProductService {
         });
       }
 
-      const results = await queryBuilder
+      const products = await queryBuilder
         .groupBy('product.id')
         .orderBy('bidderCount', 'DESC')
         .offset(skip)
         .limit(limit)
         .getRawMany();
 
-      results.map((result) => {
-        result.bidderCount = Number(result.bidderCount);
+      products.map(async (product) => {
+        product.bidderCount = Number(product.bidderCount);
+        if (departmentId !== undefined) {
+          product.departmentBidderCount = product.bidderCount;
+          product.bidderCount = await BiddingService.getBidderCountByProductId(
+            product.id,
+          );
+        } else {
+          product.departmentBidderCount = undefined;
+        }
       });
 
-      return results;
+      return products;
     } catch (error) {
       throw new InternalServerError('인기 상품 목록을 조회하지 못했어요.');
     }

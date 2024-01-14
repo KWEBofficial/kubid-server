@@ -136,6 +136,7 @@ const doc = {
           $userId: 1,
           $status: 'progress',
           $bidderCount: 4,
+          $departmentBidderCount: 2,
           $currentHighestPrice: 6300,
           $lowerBound: 4000,
           $upperBound: 7000,
