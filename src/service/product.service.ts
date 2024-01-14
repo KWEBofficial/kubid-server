@@ -11,6 +11,7 @@ import {
   GetPopularProductsOption,
   GetProductsOption,
 } from '../type/product/get.products.option';
+import ImageService from './image.service';
 
 export default class ProductService {
   //상품 등록하기
@@ -44,7 +45,10 @@ export default class ProductService {
 
   static async getProductByProductId(id: number): Promise<Product | null> {
     try {
-      return await ProductRepository.findOne({ where: { id } });
+      return await ProductRepository.findOne({
+        where: { id },
+        relations: ['image'],
+      });
     } catch (error) {
       throw new InternalServerError('해당 상품을 찾지 못했어요.');
     }
@@ -55,20 +59,28 @@ export default class ProductService {
     updateProductDTO: UpdateProductDTO,
   ): Promise<Product | null> {
     try {
-      const UpdateProductDAO = updateProductDTO;
+      const image = await ImageService.getImageById(updateProductDTO.imageId);
+      const { imageId, ...withoutImageId } = updateProductDTO;
+      const updateProductDAO = {
+        ...withoutImageId,
+        image,
+      };
+
       const updateResult = await ProductRepository.update(
         productID,
-        UpdateProductDAO,
+        updateProductDAO,
       );
       if (updateResult) {
         const updatedProduct = await ProductRepository.findOne({
           where: { id: productID },
+          relations: ['image'],
         });
         return updatedProduct;
       } else {
         return null;
       }
     } catch (error) {
+      console.error(error);
       throw new InternalServerError('제품 정보를 수정하지 못했어요.');
     }
   }
@@ -97,7 +109,7 @@ export default class ProductService {
 
       return await ProductRepository.find({
         where: search ? { productName: Like(`%${search}%`) } : undefined,
-        relations: ['user', 'department', 'imageId'],
+        relations: ['user', 'department', 'image'],
         skip: skip,
         take: limit,
         order: isRecentOrdered ? { createdAt: 'DESC' } : undefined,
@@ -152,12 +164,18 @@ export default class ProductService {
         });
       }
 
-      return await queryBuilder
+      const results = await queryBuilder
         .groupBy('product.id')
         .orderBy('bidderCount', 'DESC')
         .offset(skip)
         .limit(limit)
         .getRawMany();
+
+      results.map((result) => {
+        result.bidderCount = Number(result.bidderCount);
+      });
+
+      return results;
     } catch (error) {
       throw new InternalServerError('인기 상품 목록을 조회하지 못했어요.');
     }
@@ -172,7 +190,7 @@ export default class ProductService {
           },
           status: 'progress',
         },
-        relations: ['user', 'department'],
+        relations: ['user', 'department', 'image'],
       });
     } catch (error) {
       throw new InternalServerError(

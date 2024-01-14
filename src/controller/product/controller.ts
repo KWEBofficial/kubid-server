@@ -21,7 +21,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
     }
     const maxPrice = await BiddingService.getHighestPriceByProductId(productId);
     const tagsById = await TagService.getTagsById(productId);
-    const image = await ImageService.getImageById(product.imageId);
+    const image = await ImageService.getImageById(product.image.id);
 
     res.status(200).json({
       id: product.id,
@@ -99,6 +99,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
       tradingPlace,
       tradingTime,
     };
+
     const updatedProduct = await ProductService.updateProduct(
       productId,
       updateProductDTO,
@@ -107,7 +108,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
       throw new InternalServerError('알 수 없는 에러가 발생했어요.');
 
     const image: ImageDTO = await ImageService.getImageById(
-      updatedProduct.imageId,
+      updatedProduct.image.id,
     );
 
     const ret = {
@@ -204,7 +205,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       products.map(async (product) => {
         const currentHighestPrice =
           await BiddingService.getHighestPriceByProductId(product.id);
-        const image = await ImageService.getImageById(product.imageId);
+        const image = await ImageService.getImageById(product.image.id);
 
         return {
           id: product.id,
@@ -281,6 +282,8 @@ export const getPopularProducts: RequestHandler = async (req, res, next) => {
       products.map(async (product: any) => {
         const currentHighestPrice =
           await BiddingService.getHighestPriceByProductId(product.id);
+        const image = await ImageService.getImageById(product.imageId);
+
         return {
           id: product.id,
           productName: product.productName,
@@ -290,7 +293,7 @@ export const getPopularProducts: RequestHandler = async (req, res, next) => {
           currentHighestPrice: currentHighestPrice,
           lowerBound: product.lowerBound,
           upperBound: product.upperBound,
-          imageId: product.imageId,
+          image: image,
           departmentId: product.departmentId,
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,

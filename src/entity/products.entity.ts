@@ -59,7 +59,7 @@ export default class Product extends BaseEntity {
 
   @OneToOne(() => Image)
   @JoinColumn({ name: 'image_id' })
-  imageId!: number;
+  image!: Image;
 
   @Column()
   tradingPlace!: string;
