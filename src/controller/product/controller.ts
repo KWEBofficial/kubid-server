@@ -137,6 +137,44 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const getProducts: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.tags = ['Product'];
+  #swagger.summary = "상품 조회 및 검색";
+  #swagger.parameters['search'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "string",
+    description: "GET /products?search=공책 : \'공책\'으로 상품 검색",                       
+  };
+  #swagger.parameters['sort'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "string",
+    description: "GET /products?sort=recent : 모든 상품을 최근 올라온 순서대로 조회 (이외의 값은 상품 id 순)",                       
+  };
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "GET /products?page=1&pageSize=5 : 모든 상품 조회 (1페이지, 최대 5개)",                       
+  };
+  #swagger.responses[200] = {
+    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/GetProductsResDTO',
+        },
+      },
+    },
+  };
+  */
   try {
     const { search, sort, page, pageSize } = req.query;
     const products = await ProductService.getProducts({
@@ -176,8 +214,45 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 };
 
 export const getPopularProducts: RequestHandler = async (req, res, next) => {
-  try {
-    const { search, page, pageSize } = req.query;
+  /*
+  #swagger.tags = ['Product'];
+  #swagger.summary = "인기 상품 조회 및 검색";
+  #swagger.description = "현재 판매 중(`progress`)인 상품 중에서, 입찰자가 많은 순으로 상품을 가져옵니다."
+  #swagger.parameters['search'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "string",
+    description: "GET /products/popular?search=공책 : \'공책\'으로 인기 상품 검색",                       
+  };
+  #swagger.parameters['departmentId'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "GET /products/popular?departmentId=1 : 경영학과(departmentId = 1) 입찰자가 가장 많은 순으로 상품 조회",                       
+  };
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "GET /products/popular?page=1&pageSize=5 : 인기 상품 조회 (1페이지, 최대 5개)",                       
+  };
+  #swagger.responses[200] = {
+    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/GetPopularProductsResDTO',
+        },
+      },
+    },
+  };
+  */
     const products = await ProductService.getPopularProducts({
       search: search as string | undefined,
       page: Number(page) > 0 ? Number(page) : undefined,
