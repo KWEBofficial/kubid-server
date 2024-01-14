@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { decodeToken } from '../auth/middleware';
 import {
   getUser,
-  updateUser,
+  updateUserPassword,
   getSellingProducts,
   getBuyingProducts,
 } from './controller';
@@ -10,7 +10,7 @@ import {
 const userRouter = Router();
 
 userRouter.get('/current-user', decodeToken, getUser);
-userRouter.patch('/current-user', decodeToken, updateUser);
+userRouter.patch('/current-user', decodeToken, updateUserPassword);
 userRouter.get('/current-user/product/sell', decodeToken, getSellingProducts);
 userRouter.get('/current-user/product/buy', decodeToken, getBuyingProducts);
 
