@@ -13,12 +13,12 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    cb(null, `${req.body.id}.${file.mimetype.split('/')[1]}`);
+    cb(null, `${req.params.imageId}.${file.mimetype.split('/')[1]}`);
   },
 });
 const upload = multer({ storage });
 
 router.post('/prepare-upload', prepareUpload);
-router.post('/upload', upload.single('image'), uploadImage);
+router.post('/upload/:imageId', upload.single('image'), uploadImage);
 
 export default router;
