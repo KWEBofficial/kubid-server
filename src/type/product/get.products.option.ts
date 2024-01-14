@@ -7,6 +7,7 @@ export interface GetProductsOption {
 
 export interface GetPopularProductsOption {
   search?: string;
+  departmentId?: number;
   page?: number;
   limit?: number;
 }

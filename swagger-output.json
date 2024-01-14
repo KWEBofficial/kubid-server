@@ -273,6 +273,281 @@
         }
       }
     },
+    "/products/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "상품 조회 및 검색",
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "GET /products?search=공책 : '공책'으로 상품 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "GET /products?sort=recent : 모든 상품을 최근 올라온 순서대로 조회 (이외의 값은 상품 id 순)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "GET /products?page=1&pageSize=5 : 모든 상품 조회 (1페이지, 최대 5개)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductsResDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/popular": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "인기 상품 조회 및 검색",
+        "description": "현재 판매 중(`progress`)인 상품 중에서, 입찰자가 많은 순으로 상품을 가져옵니다.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "GET /products/popular?search=공책 : '공책'으로 인기 상품 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "in": "query",
+            "required": false,
+            "description": "GET /products/popular?departmentId=1 : 경영학과(departmentId = 1) 입찰자가 가장 많은 순으로 상품 조회",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "GET /products/popular?page=1&pageSize=5 : 인기 상품 조회 (1페이지, 최대 5개)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPopularProductsResDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{productId}/bidding": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "biddingPrice": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/bidding/give-up/{productId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/products/bidding/{productId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "biddingPrice": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/products/{productId}": {
       "get": {
         "description": "",
@@ -368,6 +643,67 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        }
+      }
+    },
+    "/tags/{tagId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "tagId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/image/prepare-upload": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/image/upload": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -686,62 +1022,135 @@
           ]
         }
       },
-      "ProductsProductsIDResDTO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number",
-            "example": 1
+      "GetProductsResDTO": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 1
+            },
+            "productName": {
+              "type": "string",
+              "example": "상품"
+            },
+            "userId": {
+              "type": "number",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "example": "progress"
+            },
+            "currentHighestPrice": {
+              "type": "number",
+              "example": 3000
+            },
+            "lowerBound": {
+              "type": "number",
+              "example": 2000
+            },
+            "upperBound": {
+              "type": "number",
+              "example": 5000
+            },
+            "departmentId": {
+              "type": "number",
+              "example": 1
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2024-01-13T14:32:36.948Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2024-01-13T14:32:36.948Z"
+            }
           },
-          "product_name": {
-            "type": "string",
-            "example": "[급처] 판매 중"
+          "required": [
+            "id",
+            "productName",
+            "userId",
+            "status",
+            "currentHighestPrice",
+            "lowerBound",
+            "upperBound",
+            "departmentId",
+            "createdAt",
+            "updatedAt"
+          ]
+        }
+      },
+      "GetPopularProductsResDTO": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 2
+            },
+            "productName": {
+              "type": "string",
+              "example": "상품2"
+            },
+            "userId": {
+              "type": "number",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "example": "progress"
+            },
+            "bidderCount": {
+              "type": "string",
+              "example": "4"
+            },
+            "currentHighestPrice": {
+              "type": "number",
+              "example": 6300
+            },
+            "lowerBound": {
+              "type": "number",
+              "example": 4000
+            },
+            "upperBound": {
+              "type": "number",
+              "example": 7000
+            },
+            "imageId": {
+              "type": "number",
+              "example": 2
+            },
+            "departmentId": {
+              "type": "number",
+              "example": 1
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2024-01-13T14:33:28.396Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2024-01-13T14:33:28.396Z"
+            }
           },
-          "user_id": {
-            "type": "number",
-            "example": 1
-          },
-          "status": {
-            "type": "string",
-            "example": "progress"
-          },
-          "lower_bound": {
-            "type": "number",
-            "example": 5000
-          },
-          "upper_bound": {
-            "type": "number",
-            "example": 10000
-          },
-          "image_id": {
-            "type": "number",
-            "example": 1
-          },
-          "department_id": {
-            "type": "number",
-            "example": 1
-          },
-          "created_at": {
-            "type": "string",
-            "example": "2024-01-04T00:00:00.000Z"
-          },
-          "updated_at": {
-            "type": "string",
-            "example": "2024-01-04T00:00:00.000Z"
-          }
-        },
-        "required": [
-          "id",
-          "product_name",
-          "user_id",
-          "status",
-          "lower_bound",
-          "upper_bound",
-          "image_id",
-          "department_id",
-          "created_at",
-          "updated_at"
-        ]
+          "required": [
+            "id",
+            "productName",
+            "userId",
+            "status",
+            "bidderCount",
+            "currentHighestPrice",
+            "lowerBound",
+            "upperBound",
+            "imageId",
+            "departmentId",
+            "createdAt",
+            "updatedAt"
+          ]
+        }
       }
     }
   }

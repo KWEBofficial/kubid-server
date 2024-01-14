@@ -96,7 +96,7 @@ export default class ProductService {
 
       return await ProductRepository.find({
         where: search ? { productName: Like(`%${search}%`) } : undefined,
-        relations: ['user', 'department'],
+        relations: ['user', 'department', 'imageId'],
         skip: skip,
         take: limit,
         order: isRecentOrdered ? { createdAt: 'DESC' } : undefined,
@@ -110,32 +110,50 @@ export default class ProductService {
     option: GetPopularProductsOption,
   ): Promise<Product[]> {
     try {
-      const { search, page, limit } = option;
+      const { search, departmentId, page, limit } = option;
       const skip =
         page !== undefined && limit !== undefined
           ? (page - 1) * limit
           : undefined;
-      return await ProductRepository.createQueryBuilder('product')
+      const queryBuilder = ProductRepository.createQueryBuilder('product')
         .select([
           'product.id as id',
-          'product.product_name',
-          'product.user_id',
+          'product.product_name as productName',
+          'product.user_id as userId',
           'product.status as status',
-          'MAX(bidding.price) as current_highest_price',
-          'product.upper_bound',
-          'product.lower_bound',
-          'product.image_id',
-          'product.department_id',
-          'product.created_at',
-          'product.updated_at',
-          'product.product_name',
-          'COUNT(DISTINCT bidding.user_id) as bidder_count',
+          'product.upper_bound as upperBound',
+          'product.lower_bound as lowerBound',
+          'product.image_id as imageId',
+          'product.department_id as departmentId',
+          'product.created_at as createdAt',
+          'product.updated_at as updatedAt',
+          'COUNT(DISTINCT bidding.user_id) as bidderCount',
         ])
-        .innerJoin('bidding', 'bidding', 'product.id = bidding.product_id')
-        .where('product.status = :status', { status: Status.Progress })
-        .andWhere('product.product_name LIKE :name', { name: `%${search}%` })
+        .innerJoin(
+          'bidding',
+          'bidding',
+          'product.id = bidding.product_id AND status = :status',
+          { status: Status.Progress },
+        );
+
+      if (departmentId !== undefined) {
+        queryBuilder.innerJoin(
+          'user',
+          'user',
+          'bidding.user_id = user.id AND user.department_id = :departmentId',
+          { departmentId },
+        );
+      }
+
+      if (search) {
+        queryBuilder.where('product.product_name LIKE :name', {
+          name: `%${search}%`,
+        });
+      }
+
+      return await queryBuilder
         .groupBy('product.id')
-        .orderBy('bidder_count', 'DESC')
+        .orderBy('bidderCount', 'DESC')
         .offset(skip)
         .limit(limit)
         .getRawMany();

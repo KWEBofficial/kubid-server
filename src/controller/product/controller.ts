@@ -191,7 +191,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
         return {
           id: product.id,
           productName: product.productName,
-          user_id: product.user.id,
+          userId: product.user.id,
           status: product.status,
           currentHighestPrice: currentHighestPrice,
           lowerBound: product.lowerBound,
@@ -203,9 +203,6 @@ export const getProducts: RequestHandler = async (req, res, next) => {
         };
       }),
     );
-
-    if (!products || !ret)
-      throw new BadRequestError('정보를 불러오는데 실패했어요.');
 
     res.json(ret);
   } catch (error) {
@@ -253,13 +250,39 @@ export const getPopularProducts: RequestHandler = async (req, res, next) => {
     },
   };
   */
+  try {
+    const { search, departmentId, page, pageSize } = req.query;
     const products = await ProductService.getPopularProducts({
       search: search as string | undefined,
+      departmentId: Number(departmentId) > 0 ? Number(departmentId) : undefined,
       page: Number(page) > 0 ? Number(page) : undefined,
       limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
     });
-    res.json(products);
+
+    const ret = await Promise.all(
+      products.map(async (product: any) => {
+        const currentHighestPrice =
+          await BiddingService.getHighestPriceByProductId(product.id);
+        return {
+          id: product.id,
+          productName: product.productName,
+          userId: product.userId,
+          status: product.status,
+          bidderCount: product.bidderCount,
+          currentHighestPrice: currentHighestPrice,
+          lowerBound: product.lowerBound,
+          upperBound: product.upperBound,
+          imageId: product.imageId,
+          departmentId: product.departmentId,
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt,
+        };
+      }),
+    );
+
+    res.json(ret);
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };
