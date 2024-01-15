@@ -117,6 +117,26 @@ const doc = {
           $current_highest_price: 40000,
         },
       ],
+      GetProductsResDTO: [
+        {
+          $id: 1,
+          $productName: '상품',
+          $userId: 1,
+          $status: 'progress',
+          $bidderCount: 4,
+          $departmentBidderCount: 2,
+          $currentHighestPrice: 3000,
+          $lowerBound: 2000,
+          $upperBound: 5000,
+          $image: {
+            $id: 1,
+            $url: 'cat.jpg',
+          },
+          $departmentId: 1,
+          $createdAt: '2024-01-13T14:32:36.948Z',
+          $updatedAt: '2024-01-13T14:32:36.948Z',
+        },
+      ],
       ProductsProductsIDResDTO: {
         $id: 1,
         $product_name: '[급처] 판매 중',

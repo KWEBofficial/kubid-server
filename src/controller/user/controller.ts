@@ -119,11 +119,6 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
   #swagger.summary = "현재 판매 중인 상품 목록";
-  #swagger.parameters['Authorization'] = {
-    in: 'header',                                     
-    required: true,                     
-    type: "string",                       
-  };
   #swagger.responses[200] = {
     description: '상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.',
     content: {
@@ -160,7 +155,7 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         status: product.status,
         currentHighestPrice: maxPrice,
         upper_bound: product.upperBound,
-        imageId: product.imageId,
+        imageId: product.image.id,
         departmentId: product.department.id,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
@@ -177,11 +172,6 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
   #swagger.tags = ['User'];
   #swagger.summary = "현재 구매 중인 상품 목록";
   #swagger.description = "현재 로그인 유저가 가장 최근에 입찰을 넣은 상품 순서대로 반환합니다."
-  #swagger.parameters['Authorization'] = {
-    in: 'header',                                     
-    required: true,                     
-    type: "string",                       
-  };
   #swagger.parameters['page'] = {
     in: 'query',                                     
     required: true,                     

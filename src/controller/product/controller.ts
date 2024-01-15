@@ -9,6 +9,8 @@ import CreateProductDTO from '../../type/product/createproduct.dto';
 import errorHandler from '../../util/errorHandler';
 import ImageService from '../../service/image.service';
 import { ImageDTO } from '../../type/image/image.dto';
+import { GetPopularProductsResult } from '../../type/product/get.popular.products.result';
+import Product from '../../entity/products.entity';
 
 export const getProductDetail: RequestHandler = async (req, res, next) => {
   try {
@@ -21,7 +23,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
     }
     const maxPrice = await BiddingService.getHighestPriceByProductId(productId);
     const tagsById = await TagService.getTagsById(productId);
-    const image = await ImageService.getImageById(product.imageId);
+    const image = await ImageService.getImageById(product.image.id);
 
     res.status(200).json({
       id: product.id,
@@ -99,6 +101,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
       tradingPlace,
       tradingTime,
     };
+
     const updatedProduct = await ProductService.updateProduct(
       productId,
       updateProductDTO,
@@ -107,7 +110,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
       throw new InternalServerError('알 수 없는 에러가 발생했어요.');
 
     const image: ImageDTO = await ImageService.getImageById(
-      updatedProduct.imageId,
+      updatedProduct.image.id,
     );
 
     const ret = {
@@ -152,63 +155,105 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-// 검색어가 있으면 상품 검색, 검색어가 없으면 상품 전체 조회
 export const getProducts: RequestHandler = async (req, res, next) => {
   /*
-  #swagger.auto = false;
   #swagger.tags = ['Product'];
-  #swagger.summary = '모든 상품 목록 반환';
+  #swagger.summary = "상품 조회 및 검색";
+  #swagger.description = "그냥 상품 조회, 최근 상품 조회, 인기 상품 조회, 검색, 페이징 등을 쿼리로 조정해서 사용할 수 있습니다."
   #swagger.parameters['search'] = {
-    in: 'query',
-    required: false,
-    type: 'string',
-  },
+    in: 'query',                                     
+    required: false,                     
+    type: "string",
+    description: "검색어",                       
+  };
+  #swagger.parameters['sort'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "string",
+    description: 'sort=recent: 최근, sort=popular: 인기 (현재 판매 중인 상품 중에서, 입찰자 많은 순으로), 이외: 정렬 없음 (상품 id 순)',                       
+  };
+  #swagger.parameters['departmentId'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: 'sort=popular일 때만 사용 가능. ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로',                       
+  };
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "페이지 번호",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: "페이지당 상품 개수",                       
+  };
   #swagger.responses[200] = {
+    description: '해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다. `bidderCount`는 `sort=popular`일 경우에만, `departmentBidderCount`는 `sort=popular&departmentId=?`일 때만 반환됩니다',
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/ProductResDTO',
+          $ref: '#/components/schemas/GetProductsResDTO',
         },
       },
     },
   };
   */
   try {
-    const searchTerm = req.query.search as string;
-    let products;
+    const { search, sort, page, pageSize, departmentId } = req.query;
+    let products: Product[] | GetPopularProductsResult[];
 
-    if (!searchTerm) {
-      //검색어가 없을경우 : 전체 조회
-      products = await ProductService.getAllProducts();
+    if (sort === 'popular') {
+      products = await ProductService.getPopularProducts({
+        search: search as string | undefined,
+        departmentId:
+          Number(departmentId) > 0 ? Number(departmentId) : undefined,
+        page: Number(page) > 0 ? Number(page) : undefined,
+        limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+      });
     } else {
-      //검색어가 있을 경우 : 검색한 항목만 조회
-      const searchTerm = req.query.search as string;
-      products = await ProductService.searchProducts(searchTerm);
+      products = await ProductService.getProducts({
+        search: search as string | undefined,
+        isRecentOrdered: sort === 'recent',
+        page: Number(page) > 0 ? Number(page) : undefined,
+        limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+      });
     }
 
     const ret = await Promise.all(
-      products.map(async (product) => {
+      products.map(async (product: Product | GetPopularProductsResult) => {
         const currentHighestPrice =
           await BiddingService.getHighestPriceByProductId(product.id);
-        const image = await ImageService.getImageById(product.imageId);
+        const image = await ImageService.getImageById(
+          'image' in product ? product.image.id : product.imageId,
+        );
 
         return {
           id: product.id,
           productName: product.productName,
-          user_id: product.user.id,
+          userId: 'user' in product ? product.user.id : product.userId,
           status: product.status,
+          bidderCount:
+            'bidderCount' in product ? product.bidderCount : undefined,
+          departmentBidderCount:
+            'departmentBidderCount' in product
+              ? product.departmentBidderCount
+              : undefined,
           currentHighestPrice: currentHighestPrice,
+          lowerBound: product.lowerBound,
           upperBound: product.upperBound,
           image: image,
-          departmentId: product.department.id,
+          departmentId:
+            'department' in product
+              ? product.department.id
+              : product.departmentId,
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,
         };
       }),
     );
-
-    if (!products || !ret)
-      throw new BadRequestError('정보를 불러오는데 실패했어요.');
 
     res.json(ret);
   } catch (error) {
@@ -216,23 +261,6 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
-/*
-// 상품 검색
-export const searchProducts: RequestHandler = async (req, res) => {
-  try {
-    const searchTerm = req.query.search as string;
-    if (!searchTerm) {
-      return res.status(400).json({ error: '검색어가 필요해요.' });
-    }
-
-    const products = await ProductService.searchProducts(searchTerm);
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ error: '서버 오류가 발생했어요.' });
-  }
-};
-*/
-//상품 등록하기
 export const createProduct: RequestHandler = async (req, res) => {
   try {
     const productData: CreateProductDTO = req.body;
