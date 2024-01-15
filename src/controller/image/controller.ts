@@ -17,8 +17,11 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
     const image = req.file;
     if (!image) throw new BadRequestError('이미지를 업로드해주세요.');
 
-    await ImageService.uploadImage(Number(req.body.id), image.filename);
-    res.status(201).json({ message: '이미지 업로드에 성공했습니다.' });
+    const imageId = Number(req.params.imageId);
+    await ImageService.uploadImage(imageId, image.filename);
+    const uploadedImage = await ImageService.getImageById(imageId);
+
+    res.status(201).json({ result: uploadedImage });
   } catch (error) {
     errorHandler(error, req, res, next);
   }
