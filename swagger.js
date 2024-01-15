@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0' });
 
 const doc = {
@@ -32,6 +34,10 @@ const doc = {
     {
       name: 'Tag',
       description: 'Tag endpoints',
+    },
+    {
+      name: 'Department',
+      description: 'Department endpoints',
     },
   ],
   components: {
@@ -163,6 +169,10 @@ const doc = {
           $updated_at: '2024-01-04T00:00:00.000Z',
         },
       ],
+      DepartmentResDTO: {
+        $id: 1,
+        $department_name: '컴퓨터학과',
+      },
     },
   },
 };
