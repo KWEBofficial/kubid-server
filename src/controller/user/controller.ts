@@ -5,6 +5,7 @@ import BiddingService from '../../service/bidding.service';
 import UpdateUserDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import { generateHashedPassword } from '../../util/authentication';
+import ImageService from '../../service/image.service';
 
 export const getUser: RequestHandler = async (req, res, next) => {
   /*
@@ -119,6 +120,18 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
   #swagger.summary = "현재 판매 중인 상품 목록";
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지 번호 ex) 1",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지당 상품 개수 ex) 5",                       
+  };
   #swagger.responses[200] = {
     description: '상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.',
     content: {
@@ -142,8 +155,20 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
 
+    const { page: pageAsString, pageSize: pageSizeAsString } = req.query;
+    const page = Number(pageAsString);
+    const pageSize = Number(pageSizeAsString);
+    if (!page || !pageSize)
+      throw new BadRequestError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
     const userResponse = [];
-    const products = await ProductService.getSellingProductsByUserId(userId);
+    const products = await ProductService.getSellingProductsByUserId(
+      userId,
+      page,
+      pageSize,
+    );
     for (const product of products) {
       const maxPrice = await BiddingService.getHighestPriceByProductId(
         product.id,
@@ -155,7 +180,7 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         status: product.status,
         currentHighestPrice: maxPrice,
         upper_bound: product.upperBound,
-        imageId: product.image.id,
+        image: product.image,
         departmentId: product.department.id,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
@@ -222,7 +247,15 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       const current_highest_price =
         await BiddingService.getHighestPriceByProductId(product.id);
 
-      userResponse.push({ ...product, current_highest_price });
+      const image = await ImageService.getImageById(product.image_id);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { image_id, ...productWithoutImageId } = product;
+      userResponse.push({
+        ...productWithoutImageId,
+        current_highest_price,
+        image,
+      });
     }
     res.status(200).json(userResponse);
   } catch (error) {

@@ -97,7 +97,10 @@ const doc = {
         $status: 'progress',
         $currentHighestPrice: 5000,
         $upperBound: 10000,
-        $imageId: 1,
+        $image: {
+          $id: 1,
+          $url: 'cat.jpg',
+        },
         $departmentId: 1,
         $createdAt: '2024-01-04T00:00:00.000Z',
         $updatedAt: '2024-01-04T00:00:00.000Z',
@@ -110,7 +113,10 @@ const doc = {
           $status: 'progress',
           $user_highest_price: 35000,
           $upper_bound: 50000,
-          $image_id: 1,
+          $image: {
+            $id: 1,
+            $url: 'cat.jpg',
+          },
           $department_id: 1,
           $created_at: '2024-01-10T07:10:11.684Z',
           $updated_at: '2024-01-10T07:10:11.684Z',
