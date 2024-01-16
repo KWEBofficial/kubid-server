@@ -191,8 +191,13 @@ export default class ProductService {
     }
   }
 
-  static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
+  static async getSellingProductsByUserId(
+    userId: number,
+    page: number,
+    limit: number,
+  ): Promise<Product[]> {
     try {
+      const skip = (page - 1) * limit;
       return await ProductRepository.find({
         where: {
           user: {
@@ -201,6 +206,8 @@ export default class ProductService {
           status: 'progress',
         },
         relations: ['user', 'department', 'image'],
+        skip: skip,
+        take: limit,
       });
     } catch (error) {
       throw new InternalServerError(
