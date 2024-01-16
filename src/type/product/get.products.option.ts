@@ -3,6 +3,7 @@ export interface GetProductsOption {
   isRecentOrdered?: boolean;
   page?: number;
   limit?: number;
+  departmentId?: number;
 }
 
 export interface GetPopularProductsOption {
