@@ -31,6 +31,10 @@
     {
       "name": "Tag",
       "description": "Tag endpoints"
+    },
+    {
+      "name": "Department",
+      "description": "Department endpoints"
     }
   ],
   "paths": {
@@ -125,7 +129,6 @@
           {
             "name": "Authorization",
             "in": "header",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -161,7 +164,6 @@
           {
             "name": "Authorization",
             "in": "header",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -279,13 +281,13 @@
           "Product"
         ],
         "summary": "상품 조회 및 검색",
-        "description": "",
+        "description": "그냥 상품 조회, 최근 상품 조회, 인기 상품 조회, 검색, 페이징 등을 쿼리로 조정해서 사용할 수 있습니다.",
         "parameters": [
           {
             "name": "search",
             "in": "query",
             "required": false,
-            "description": "GET /products?search=공책 : '공책'으로 상품 검색",
+            "description": "검색어",
             "schema": {
               "type": "string"
             }
@@ -294,16 +296,25 @@
             "name": "sort",
             "in": "query",
             "required": false,
-            "description": "GET /products?sort=recent : 모든 상품을 최근 올라온 순서대로 조회 (이외의 값은 상품 id 순)",
+            "description": "sort=recent: 최근, sort=popular: 인기 (현재 판매 중인 상품 중에서, 입찰자 많은 순으로), 이외: 정렬 없음 (상품 id 순)",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "in": "query",
+            "required": false,
+            "description": "sort=popular일 때만 사용 가능. ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로",
+            "schema": {
+              "type": "number"
             }
           },
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "description": "",
+            "description": "페이지 번호",
             "schema": {
               "type": "number"
             }
@@ -312,7 +323,7 @@
             "name": "pageSize",
             "in": "query",
             "required": false,
-            "description": "GET /products?page=1&pageSize=5 : 모든 상품 조회 (1페이지, 최대 5개)",
+            "description": "페이지당 상품 개수",
             "schema": {
               "type": "number"
             }
@@ -334,7 +345,7 @@
         ],
         "responses": {
           "200": {
-            "description": "해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.",
+            "description": "해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다. `bidderCount`는 `sort=popular`일 경우에만, `departmentBidderCount`는 `sort=popular&departmentId=?`일 때만 반환됩니다",
             "content": {
               "application/json": {
                 "schema": {
@@ -362,79 +373,6 @@
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/products/popular": {
-      "get": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "인기 상품 조회 및 검색",
-        "description": "현재 판매 중(`progress`)인 상품 중에서, 입찰자가 많은 순으로 상품을 가져옵니다.",
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "required": false,
-            "description": "GET /products/popular?search=공책 : '공책'으로 인기 상품 검색",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "departmentId",
-            "in": "query",
-            "required": false,
-            "description": "GET /products/popular?departmentId=1 : 경영학과(departmentId = 1) 입찰자가 가장 많은 순으로 상품 조회",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "description": "GET /products/popular?page=1&pageSize=5 : 인기 상품 조회 (1페이지, 최대 5개)",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "content",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "해당하는 상품이 없을 경우 빈 배열 `[]`을 반환합니다.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPopularProductsResDTO"
-                }
-              }
-            }
           }
         }
       }
@@ -720,23 +658,40 @@
         }
       }
     },
-    "/image/upload": {
+    "/image/upload/{imageId}": {
       "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "imageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "example": "any"
-                  }
+        }
+      }
+    },
+    "/department/departments": {
+      "get": {
+        "tags": [
+          "Department"
+        ],
+        "summary": "모든 학과 정보 조회",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentResDTO"
                 }
               }
             }
@@ -1079,6 +1034,14 @@
               "type": "string",
               "example": "progress"
             },
+            "bidderCount": {
+              "type": "number",
+              "example": 4
+            },
+            "departmentBidderCount": {
+              "type": "number",
+              "example": 2
+            },
             "currentHighestPrice": {
               "type": "number",
               "example": 3000
@@ -1091,6 +1054,23 @@
               "type": "number",
               "example": 5000
             },
+            "image": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "url": {
+                  "type": "string",
+                  "example": "cat.jpg"
+                }
+              },
+              "required": [
+                "id",
+                "url"
+              ]
+            },
             "departmentId": {
               "type": "number",
               "example": 1
@@ -1102,74 +1082,6 @@
             "updatedAt": {
               "type": "string",
               "example": "2024-01-13T14:32:36.948Z"
-            }
-          },
-          "required": [
-            "id",
-            "productName",
-            "userId",
-            "status",
-            "currentHighestPrice",
-            "lowerBound",
-            "upperBound",
-            "departmentId",
-            "createdAt",
-            "updatedAt"
-          ]
-        }
-      },
-      "GetPopularProductsResDTO": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number",
-              "example": 2
-            },
-            "productName": {
-              "type": "string",
-              "example": "상품2"
-            },
-            "userId": {
-              "type": "number",
-              "example": 1
-            },
-            "status": {
-              "type": "string",
-              "example": "progress"
-            },
-            "bidderCount": {
-              "type": "string",
-              "example": "4"
-            },
-            "currentHighestPrice": {
-              "type": "number",
-              "example": 6300
-            },
-            "lowerBound": {
-              "type": "number",
-              "example": 4000
-            },
-            "upperBound": {
-              "type": "number",
-              "example": 7000
-            },
-            "imageId": {
-              "type": "number",
-              "example": 2
-            },
-            "departmentId": {
-              "type": "number",
-              "example": 1
-            },
-            "createdAt": {
-              "type": "string",
-              "example": "2024-01-13T14:33:28.396Z"
-            },
-            "updatedAt": {
-              "type": "string",
-              "example": "2024-01-13T14:33:28.396Z"
             }
           },
           "required": [
@@ -1178,10 +1090,11 @@
             "userId",
             "status",
             "bidderCount",
+            "departmentBidderCount",
             "currentHighestPrice",
             "lowerBound",
             "upperBound",
-            "imageId",
+            "image",
             "departmentId",
             "createdAt",
             "updatedAt"
@@ -1329,6 +1242,23 @@
             "updated_at"
           ]
         }
+      },
+      "DepartmentResDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "department_name": {
+            "type": "string",
+            "example": "컴퓨터학과"
+          }
+        },
+        "required": [
+          "id",
+          "department_name"
+        ]
       }
     }
   }

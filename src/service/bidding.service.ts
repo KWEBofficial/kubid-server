@@ -18,15 +18,20 @@ export default class BiddingService {
       throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
     }
   }
-  static async getBiddingsByProductId(productId: number): Promise<Bidding[]> {
+
+  static async getBiddingsByProductId(
+    productId: number,
+  ): Promise<{ bidding: Bidding; user_id: number }[]> {
     try {
-      return await BiddingRepository.find({
-        where: {
-          product: {
-            id: productId,
-          },
-        },
-      });
+      const biddingsWithUserId = await BiddingRepository.createQueryBuilder(
+        'bidding',
+      )
+        .select(['bidding.id', 'bidding.price', 'user.id as user_id'])
+        .innerJoin('bidding.user', 'user')
+        .where('bidding.product.id = :productId', { productId })
+        .getRawMany();
+
+      return biddingsWithUserId;
     } catch (error) {
       throw new InternalServerError('상품의 입찰 내역을 불러오지 못했어요.');
     }

@@ -36,7 +36,6 @@ export default class ProductService {
         tradingTime: productData.tradingTime,
         status: Status.Progress,
       };
-      console.log(CreateProductDAO);
 
       const product = ProductRepository.create(CreateProductDAO);
       return await ProductRepository.save(product);
