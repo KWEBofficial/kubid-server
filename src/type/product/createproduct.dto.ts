@@ -11,8 +11,9 @@ export default interface CreateProductDTO {
   upperBound: number;
   lowerBound: number;
   imageId: number;
-  tradingPlace: string;
-  tradingTime: string;
+  tags: string[];
+  tradeLocation: string;
+  tradeDate: string;
   createdAt: string;
   updatedAt?: string;
   status: Status;
