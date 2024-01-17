@@ -26,9 +26,6 @@ Content-Type: application/json
     "email": "hayeongparkkkk@naver.com",
     "nickname": "TEST1234",
     "password": "123455",
-    "email": "hayeongparkkkk@naver.com",
-    "nickname": "TEST1234",
-    "password": "123455",
     "departmentId": 1
 }
 
@@ -51,7 +48,7 @@ Content-Type: application/json
 ### 상품 등록 테스트
 POST http://localhost:3000/products HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOnpsUXlVZzNxVWI5MCt3dVFZeGlrc1pleCtNc3hlWG5mdFE4OUVkRDhzWE09OjIxMTk1Njo2NDpwRUtxMG56Y1RTNzRmU3BxYnhOT2lrcWhuNGtNV0psUzlDeCs5L3JySGR4RVpZWVdQS0ZvTElyVVFKaTduY2pTSHdmM1RDOEdLTmRDMmlhNWVXeTcvZz09IiwiaWF0IjoxNzA1MTQ3MTYzLCJleHAiOjE3MDUxNTA3NjN9.DubOzPzfD2_IYiwNWPCHfKwhu7dj4VbDKK5yctGOEH4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoYXllb25ncGFya2tra0BuYXZlci5jb20iLCJuaWNrbmFtZSI6IlRFU1QxMjM0IiwiaWF0IjoxNzA1Mzg3NDk1LCJleHAiOjE3MDUzOTEwOTV9.etDCqYB43Yuo9RWQC41L1aLSD0RRpZmmdekYixl8Q3Q
 
 {
     "productName": "테스트 상품",
@@ -64,6 +61,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmlja25hb
     "tradingPlace": "서울시 강남구",
     "tradingTime": "2024-01-10T15:00:00",
     "department_id": 1
+
 }
 
 
@@ -72,15 +70,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmlja25hb
 GET http://localhost:3000/users/current-user HTTP/1.1
 Content-Type: application/json
 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOjRtcHhYWkpqR3FsV0xvR3o3QjVrcjRPYjhJVXNEYXY1QlNoRWZtQVcySnc9OjIxODE1NDo2NDpkbEplOGZCUlRNNFpIYjZkU21KN0YxbjUvQXQwbFgydVl6OGgyVTF5bkd1WEI4Q29EeHZSQlJnRlhkdzdlbXRaQWZiR1MvSkphY0JVTzlQSDVxKzhUZz09IiwiaWF0IjoxNzA1MDM4MjEzLCJleHAiOjE3MDUwNDE4MTN9.SVvhBByvpZ9-0enj2jiyvTBlP89CDs0zfd4F789kXes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoYXllb25ncGFya2tra0BuYXZlci5jb20iLCJuaWNrbmFtZSI6IlRFU1QxMjM0IiwiaWF0IjoxNzA1MzI2NjE5LCJleHAiOjE3MDUzMzAyMTl9.2TDzEemAO-R2PI105Kv8rH-RjBdzdmX3MBVB3tAN0qs
 
 
 ### 판매 중인 상품 확인
 
-GET http://localhost:3000/users/current-user/product/sell HTTP/1.1
+GET http://localhost:3000/users/current-user/product/buy?page=1&pageSize=5 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmlja25hbWUiOiJURVNUMTIzNCIsInBhc3N3b3JkIjoic2hhNTEyOnpsUXlVZzNxVWI5MCt3dVFZeGlrc1pleCtNc3hlWG5mdFE4OUVkRDhzWE09OjIxMTk1Njo2NDpwRUtxMG56Y1RTNzRmU3BxYnhOT2lrcWhuNGtNV0psUzlDeCs5L3JySGR4RVpZWVdQS0ZvTElyVVFKaTduY2pTSHdmM1RDOEdLTmRDMmlhNWVXeTcvZz09IiwiaWF0IjoxNzA1MTQ3NTQ2LCJleHAiOjE3MDUxNTExNDZ9.rjiRFmOaACR8Qv-VVWXWTX1gb9k8X2bNF59e5KUDzOM
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoYXllb25ncGFya2tra0BuYXZlci5jb20iLCJuaWNrbmFtZSI6IlRFU1QxMjM0IiwiaWF0IjoxNzA1Mzg3NDk1LCJleHAiOjE3MDUzOTEwOTV9.etDCqYB43Yuo9RWQC41L1aLSD0RRpZmmdekYixl8Q3Q
 ### 상품 상세정보 조회하기
 
 GET http://localhost:3000/products/2 HTTP/1.1
