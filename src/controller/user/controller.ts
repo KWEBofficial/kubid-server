@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { BadRequestError, InternalServerError } from '../../util/customErrors';
 import ProductService from '../../service/product.service';
 import BiddingService from '../../service/bidding.service';
-import UpdateUserDTO from '../../type/user/update.input';
+import UpdateUserPasswordDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import { generateHashedPassword } from '../../util/authentication';
 import ImageService from '../../service/image.service';
@@ -31,11 +31,12 @@ export const getUser: RequestHandler = async (req, res, next) => {
       bearerAuth: [],
     },
   ];
-  */
+    */
   try {
     const userId = req.userId;
     if (!userId) throw new BadRequestError('temp');
     const user = await UserService.getUserById(userId);
+    console.log(req);
     if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
     res.status(200).json({
       id: user.id,
@@ -43,6 +44,7 @@ export const getUser: RequestHandler = async (req, res, next) => {
       nickname: user.nickname,
       departmentId: user.department.id,
       createdAt: user.createdAt,
+      image: user.image,
     });
   } catch (error) {
     next(error);
@@ -90,17 +92,17 @@ export const updateUserPassword: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
 
-    const { password } = req.body as UpdateUserDTO;
+    const { password } = req.body as UpdateUserPasswordDTO;
     if (!password)
       throw new BadRequestError('새로운 비밀번호를 입력해 주세요.');
 
     const hashedPassword = await generateHashedPassword(password);
-    const updateUserDTO: UpdateUserDTO = {
+    const UpdateUserPasswordDTO: UpdateUserPasswordDTO = {
       password: hashedPassword,
     };
 
     const { email, department, createdAt, nickname } =
-      await UserService.updateUser(userId, updateUserDTO);
+      await UserService.updateUser(userId, UpdateUserPasswordDTO);
 
     const userResponse = {
       userId,
@@ -173,17 +175,22 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
       const maxPrice = await BiddingService.getHighestPriceByProductId(
         product.id,
       );
+      // 추가: bidderCount 구하기
+      const bidderCount = await BiddingService.getBidderCountByProductId(
+        product.id,
+      );
       userResponse.push({
         id: product.id,
-        productName: product.productName,
-        userId: product.user.id,
+        product_name: product.productName,
+        user_id: product.user.id,
         status: product.status,
-        currentHighestPrice: maxPrice,
         upper_bound: product.upperBound,
+        department_id: product.department.id,
+        created_at: product.createdAt,
+        updated_at: product.updatedAt,
+        current_highest_price: maxPrice,
         image: product.image,
-        departmentId: product.department.id,
-        createdAt: product.createdAt,
-        updatedAt: product.updatedAt,
+        bidderCount: bidderCount, // bidderCount 추가
       });
     }
     res.status(200).json(userResponse);
@@ -248,13 +255,17 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
         await BiddingService.getHighestPriceByProductId(product.id);
 
       const image = await ImageService.getImageById(product.image_id);
-
+      // 추가: bidderCount 구하기
+      const bidderCount = await BiddingService.getBidderCountByProductId(
+        product.id,
+      );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image_id, ...productWithoutImageId } = product;
       userResponse.push({
         ...productWithoutImageId,
         current_highest_price,
         image,
+        bidderCount: bidderCount, // bidderCount 추가
       });
     }
     res.status(200).json(userResponse);

@@ -8,6 +8,7 @@ import {
 
 import Department from './department.entity';
 import { BaseEntity } from './base.entity';
+import Image from './image.entity';
 /*
 
 Table users {
@@ -40,4 +41,8 @@ export default class User extends BaseEntity {
   @JoinColumn({ name: 'department_id' })
   department!: Department;
   /////////참조를 위해 추가///////////
+
+  @ManyToOne(() => Image)
+  @JoinColumn({ name: 'image_id' })
+  image!: Image;
 }

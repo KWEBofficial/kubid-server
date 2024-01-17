@@ -236,7 +236,7 @@ export default class ProductService {
           'product.status as status',
           'MAX(bidding.price) as user_highest_price',
           'product.upper_bound',
-          'product.image_id',
+          'product.image',
           'product.department_id',
           'product.created_at',
           'product.updated_at',
