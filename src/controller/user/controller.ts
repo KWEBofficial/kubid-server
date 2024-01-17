@@ -2,9 +2,10 @@ import { RequestHandler } from 'express';
 import { BadRequestError, InternalServerError } from '../../util/customErrors';
 import ProductService from '../../service/product.service';
 import BiddingService from '../../service/bidding.service';
-import UpdateUserDTO from '../../type/user/update.input';
+import UpdateUserPasswordDTO from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import { generateHashedPassword } from '../../util/authentication';
+import ImageService from '../../service/image.service';
 
 export const getUser: RequestHandler = async (req, res, next) => {
   /*
@@ -30,11 +31,12 @@ export const getUser: RequestHandler = async (req, res, next) => {
       bearerAuth: [],
     },
   ];
-  */
+    */
   try {
     const userId = req.userId;
     if (!userId) throw new BadRequestError('temp');
     const user = await UserService.getUserById(userId);
+    console.log(req);
     if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
     res.status(200).json({
       id: user.id,
@@ -42,6 +44,7 @@ export const getUser: RequestHandler = async (req, res, next) => {
       nickname: user.nickname,
       departmentId: user.department.id,
       createdAt: user.createdAt,
+      image: user.image,
     });
   } catch (error) {
     next(error);
@@ -89,17 +92,17 @@ export const updateUserPassword: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
 
-    const { password } = req.body as UpdateUserDTO;
+    const { password } = req.body as UpdateUserPasswordDTO;
     if (!password)
       throw new BadRequestError('새로운 비밀번호를 입력해 주세요.');
 
     const hashedPassword = await generateHashedPassword(password);
-    const updateUserDTO: UpdateUserDTO = {
+    const UpdateUserPasswordDTO: UpdateUserPasswordDTO = {
       password: hashedPassword,
     };
 
     const { email, department, createdAt, nickname } =
-      await UserService.updateUser(userId, updateUserDTO);
+      await UserService.updateUser(userId, UpdateUserPasswordDTO);
 
     const userResponse = {
       userId,
@@ -119,6 +122,18 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
   /*
   #swagger.tags = ['User'];
   #swagger.summary = "현재 판매 중인 상품 목록";
+  #swagger.parameters['page'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지 번호 ex) 1",                       
+  };
+  #swagger.parameters['pageSize'] = {
+    in: 'query',                                     
+    required: true,                     
+    type: "number",
+    description: "페이지당 상품 개수 ex) 5",                       
+  };
   #swagger.responses[200] = {
     description: '상품의 입찰 내역이 없을 경우 `currentHighestPrice`는 `null`이 됩니다.',
     content: {
@@ -142,23 +157,40 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
 
+    const { page: pageAsString, pageSize: pageSizeAsString } = req.query;
+    const page = Number(pageAsString);
+    const pageSize = Number(pageSizeAsString);
+    if (!page || !pageSize)
+      throw new BadRequestError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
     const userResponse = [];
-    const products = await ProductService.getSellingProductsByUserId(userId);
+    const products = await ProductService.getSellingProductsByUserId(
+      userId,
+      page,
+      pageSize,
+    );
     for (const product of products) {
       const maxPrice = await BiddingService.getHighestPriceByProductId(
         product.id,
       );
+      // 추가: bidderCount 구하기
+      const bidderCount = await BiddingService.getBidderCountByProductId(
+        product.id,
+      );
       userResponse.push({
         id: product.id,
-        productName: product.productName,
-        userId: product.user.id,
+        product_name: product.productName,
+        user_id: product.user.id,
         status: product.status,
-        currentHighestPrice: maxPrice,
         upper_bound: product.upperBound,
-        imageId: product.image.id,
-        departmentId: product.department.id,
-        createdAt: product.createdAt,
-        updatedAt: product.updatedAt,
+        department_id: product.department.id,
+        created_at: product.createdAt,
+        updated_at: product.updatedAt,
+        current_highest_price: maxPrice,
+        image: product.image,
+        bidderCount: bidderCount, // bidderCount 추가
       });
     }
     res.status(200).json(userResponse);
@@ -222,7 +254,19 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       const current_highest_price =
         await BiddingService.getHighestPriceByProductId(product.id);
 
-      userResponse.push({ ...product, current_highest_price });
+      const image = await ImageService.getImageById(product.image_id);
+      // 추가: bidderCount 구하기
+      const bidderCount = await BiddingService.getBidderCountByProductId(
+        product.id,
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { image_id, ...productWithoutImageId } = product;
+      userResponse.push({
+        ...productWithoutImageId,
+        current_highest_price,
+        image,
+        bidderCount: bidderCount, // bidderCount 추가
+      });
     }
     res.status(200).json(userResponse);
   } catch (error) {

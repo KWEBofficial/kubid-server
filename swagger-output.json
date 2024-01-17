@@ -132,6 +132,38 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "페이지 번호 ex) 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "description": "페이지당 상품 개수 ex) 5",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -305,7 +337,7 @@
             "name": "departmentId",
             "in": "query",
             "required": false,
-            "description": "sort=popular일 때만 사용 가능. ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로",
+            "description": "sort=popular일 때와 아닐 때의 동작이 다른 것에 주의 ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로, ex) sort=recent&departmentId=49: 컴퓨터학과 상품들을 최근 순으로",
             "schema": {
               "type": "number"
             }
@@ -918,9 +950,22 @@
             "type": "number",
             "example": 10000
           },
-          "imageId": {
-            "type": "number",
-            "example": 1
+          "image": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "url": {
+                "type": "string",
+                "example": "cat.jpg"
+              }
+            },
+            "required": [
+              "id",
+              "url"
+            ]
           },
           "departmentId": {
             "type": "number",
@@ -942,7 +987,7 @@
           "status",
           "currentHighestPrice",
           "upperBound",
-          "imageId",
+          "image",
           "departmentId",
           "createdAt",
           "updatedAt"
@@ -977,9 +1022,22 @@
               "type": "number",
               "example": 50000
             },
-            "image_id": {
-              "type": "number",
-              "example": 1
+            "image": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "url": {
+                  "type": "string",
+                  "example": "cat.jpg"
+                }
+              },
+              "required": [
+                "id",
+                "url"
+              ]
             },
             "department_id": {
               "type": "number",
@@ -1005,7 +1063,7 @@
             "status",
             "user_highest_price",
             "upper_bound",
-            "image_id",
+            "image",
             "department_id",
             "created_at",
             "updated_at",

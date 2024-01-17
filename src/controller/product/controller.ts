@@ -194,7 +194,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
     in: 'query',                                     
     required: false,                     
     type: "number",
-    description: 'sort=popular일 때만 사용 가능. ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로',                       
+    description: 'sort=popular일 때와 아닐 때의 동작이 다른 것에 주의 ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로, ex) sort=recent&departmentId=49: 컴퓨터학과 상품들을 최근 순으로'
   };
   #swagger.parameters['page'] = {
     in: 'query',                                     
@@ -237,6 +237,8 @@ export const getProducts: RequestHandler = async (req, res, next) => {
         isRecentOrdered: sort === 'recent',
         page: Number(page) > 0 ? Number(page) : undefined,
         limit: Number(pageSize) > 0 ? Number(pageSize) : undefined,
+        departmentId:
+          Number(departmentId) > 0 ? Number(departmentId) : undefined,
       });
     }
 

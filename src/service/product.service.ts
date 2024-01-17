@@ -61,6 +61,7 @@ export default class ProductService {
   ): Promise<Product | null> {
     try {
       const image = await ImageService.getImageById(updateProductDTO.imageId);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { imageId, ...withoutImageId } = updateProductDTO;
       const updateProductDAO = {
         ...withoutImageId,
@@ -102,14 +103,18 @@ export default class ProductService {
 
   static async getProducts(option: GetProductsOption): Promise<Product[]> {
     try {
-      const { search, isRecentOrdered, page, limit } = option;
+      const { search, isRecentOrdered, page, limit, departmentId } = option;
       const skip =
         page !== undefined && limit !== undefined
           ? (page - 1) * limit
           : undefined;
 
       return await ProductRepository.find({
-        where: search ? { productName: Like(`%${search}%`) } : undefined,
+        // where: search ? { productName: Like(`%${search}%`) } : undefined,
+        where: {
+          productName: search ? Like(`%${search}%`) : undefined,
+          department: departmentId ? { id: departmentId } : undefined,
+        },
         relations: ['user', 'department', 'image'],
         skip: skip,
         take: limit,
@@ -190,8 +195,13 @@ export default class ProductService {
     }
   }
 
-  static async getSellingProductsByUserId(userId: number): Promise<Product[]> {
+  static async getSellingProductsByUserId(
+    userId: number,
+    page: number,
+    limit: number,
+  ): Promise<Product[]> {
     try {
+      const skip = (page - 1) * limit;
       return await ProductRepository.find({
         where: {
           user: {
@@ -200,6 +210,8 @@ export default class ProductService {
           status: 'progress',
         },
         relations: ['user', 'department', 'image'],
+        skip: skip,
+        take: limit,
       });
     } catch (error) {
       throw new InternalServerError(
@@ -223,7 +235,7 @@ export default class ProductService {
           'product.status as status',
           'MAX(bidding.price) as user_highest_price',
           'product.upper_bound',
-          'product.image_id',
+          'product.image',
           'product.department_id',
           'product.created_at',
           'product.updated_at',
