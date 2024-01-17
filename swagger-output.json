@@ -409,6 +409,61 @@
         }
       }
     },
+    "/products/count": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "상품 검색 결과 개수 조회",
+        "description": "조건에 해당하는 상품의 개수를 반환합니다.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "검색어",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "in": "query",
+            "required": false,
+            "description": "해당 학과의 상품만 검색",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductsCountResDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/products/{productId}/bidding": {
       "post": {
         "description": "",
@@ -605,6 +660,26 @@
           {
             "name": "Authorization",
             "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/products/sell/{productId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -1158,6 +1233,18 @@
             "updatedAt"
           ]
         }
+      },
+      "GetProductsCountResDTO": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "example": 6
+          }
+        },
+        "required": [
+          "count"
+        ]
       },
       "ProductsProductsIDResDTO": {
         "type": "object",
