@@ -263,6 +263,48 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const countProducts: RequestHandler = async (req, res, next) => {
+  /*
+  #swagger.tags = ['Product'];
+  #swagger.summary = "상품 검색 결과 개수 조회";
+  #swagger.description = "조건에 해당하는 상품의 개수를 반환합니다."
+  #swagger.parameters['search'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "string",
+    description: "검색어",                       
+  };
+  #swagger.parameters['departmentId'] = {
+    in: 'query',                                     
+    required: false,                     
+    type: "number",
+    description: '해당 학과의 상품만 검색'
+  };
+  #swagger.responses[200] = {
+    description: '',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/GetProductsCountResDTO',
+        },
+      },
+    },
+  };
+  */
+  try {
+    const { search, departmentId } = req.query;
+    const count = await ProductService.countProducts({
+      search: search !== undefined ? String(search) : '',
+      departmentId: Number(departmentId) > 0 ? Number(departmentId) : undefined,
+    });
+    res.status(200).json({
+      count,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createProduct: RequestHandler = async (req, res) => {
   try {
     const productData: CreateProductDTO = req.body;

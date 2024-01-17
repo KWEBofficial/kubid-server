@@ -9,11 +9,13 @@ import {
   bidProduct,
   giveUpBidding,
   createProduct,
+  countProducts,
 } from './controller';
 
 const productRouter = Router();
 
 productRouter.get('/', getProducts);
+productRouter.get('/count', countProducts);
 productRouter.post('/', decodeToken, createProduct);
 productRouter.post('/:productId/bidding', decodeToken, bidProduct);
 productRouter.post('/bidding/give-up/:productId', decodeToken, giveUpBidding);
