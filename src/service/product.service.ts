@@ -231,12 +231,12 @@ export default class ProductService {
       const rawProducts = await ProductRepository.createQueryBuilder('product')
         .select([
           'product.id as id',
-          'product.product_name',
+          'product.product_name as productName',
           'product.user_id',
           'product.status as status',
-          'MAX(bidding.price) as user_highest_price',
-          'product.lower_bound',
-          'product.upper_bound',
+          'product.lower_bound as lowerBound',
+          'MAX(bidding.price) as userHighestPrice',
+          'product.upper_bound as upperBound',
           'product.image',
           'product.department_id',
           'product.created_at',
@@ -255,25 +255,9 @@ export default class ProductService {
         .getRawMany();
 
       const products = rawProducts.map((rawProduct) => {
-        // 필요한 필드를 새 이름으로 매핑
-        const {
-          product_name,
-          department_name,
-          lower_bound,
-          current_highest_price,
-          upper_bound,
-          user_bidding_last_created_at,
-          ...rest
-        } = rawProduct;
-        return {
-          ...rest,
-          productName: product_name, // 'product_name'을 'productName'으로 매핑
-          departmentName: department_name,
-          lowerBound: lower_bound,
-          currentHighestPrice: current_highest_price,
-          upperBound: upper_bound,
-          userBiddingLastCreatedAt: user_bidding_last_created_at, // 'user_bidding_last_created_at' 필드도 포함
-        };
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { user_bidding_last_created_at, ...product } = rawProduct;
+        return product;
       });
       return products;
     } catch (error) {
