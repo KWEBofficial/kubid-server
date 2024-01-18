@@ -255,12 +255,12 @@ export default class ProductService {
       const rawProducts = await ProductRepository.createQueryBuilder('product')
         .select([
           'product.id as id',
-          'product.product_name',
+          'product.product_name as productName',
           'product.user_id',
           'product.status as status',
-          'MAX(bidding.price) as user_highest_price',
-          'product.lower_bound',
-          'product.upper_bound',
+          'product.lower_bound as lowerBound',
+          'MAX(bidding.price) as userHighestPrice',
+          'product.upper_bound as upperBound',
           'product.image',
           'product.department_id',
           'product.created_at',
