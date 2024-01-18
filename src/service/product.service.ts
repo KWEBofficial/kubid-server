@@ -21,6 +21,7 @@ export default class ProductService {
   static async createProduct(productData: CreateProductDTO): Promise<Product> {
     try {
       const user = await UserService.getUserById(productData.user_id);
+      const image = await ImageService.getImageById(productData.imageId);
       if (!user) {
         throw new Error('해당 ID의 사용자가 존재하지 않습니다.');
       }
@@ -32,13 +33,14 @@ export default class ProductService {
         desc: productData.desc,
         upperBound: productData.upperBound,
         lowerBound: productData.lowerBound,
-        imageId: productData.imageId,
-        tradingPlace: productData.tradingPlace,
-        tradingTime: productData.tradingTime,
+        image: image,
+        tradingPlace: productData.tradeLocation,
+        tradingTime: productData.tradeDate,
         status: Status.Progress,
       };
 
       const product = ProductRepository.create(CreateProductDAO);
+
       return await ProductRepository.save(product);
     } catch (error) {
       throw new InternalServerError('상품을 등록하는데 실패했어요.');
