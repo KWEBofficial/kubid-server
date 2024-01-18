@@ -243,15 +243,15 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
       );
       userResponse.push({
         id: product.id,
-        product_name: product.productName,
+        productName: product.productName,
         user_id: product.user.id,
         status: product.status,
-        lower_bound: product.lowerBound,
-        upper_bound: product.upperBound,
+        lowerBound: product.lowerBound,
+        upperBound: product.upperBound,
         department_id: product.department.id,
         created_at: product.createdAt,
         updated_at: product.updatedAt,
-        current_highest_price: maxPrice,
+        currentHighestPrice: maxPrice,
         image: product.image,
         bidderCount: bidderCount, // bidderCount 추가
       });
@@ -314,7 +314,7 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       pageSize,
     );
     for (const product of products) {
-      const current_highest_price =
+      const currentHighestPrice =
         await BiddingService.getHighestPriceByProductId(product.id);
 
       // 추가: bidderCount 구하기
@@ -325,7 +325,7 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       const { image_id, ...productWithoutImageId } = product;
       userResponse.push({
         ...productWithoutImageId,
-        current_highest_price,
+        currentHighestPrice,
         image: product.image,
         bidderCount: bidderCount, // bidderCount 추가
       });
