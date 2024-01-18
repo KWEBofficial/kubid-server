@@ -9,12 +9,14 @@ import {
   bidProduct,
   giveUpBidding,
   createProduct,
+  countProducts,
 } from './controller';
 
 const productRouter = Router();
 
-productRouter.get('', getProducts);
+productRouter.get('/', getProducts);
 productRouter.post('/register', decodeToken, createProduct);
+productRouter.get('/count', countProducts);
 productRouter.post('/:productId/bidding', decodeToken, bidProduct);
 productRouter.post('/bidding/give-up/:productId', decodeToken, giveUpBidding);
 productRouter.post('/bidding/:productId', decodeToken, bidProduct);

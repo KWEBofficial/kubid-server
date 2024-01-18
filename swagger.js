@@ -143,6 +143,9 @@ const doc = {
           $updatedAt: '2024-01-13T14:32:36.948Z',
         },
       ],
+      GetProductsCountResDTO: {
+        $count: 6,
+      },
       ProductsProductsIDResDTO: {
         $id: 1,
         $product_name: '[급처] 판매 중',

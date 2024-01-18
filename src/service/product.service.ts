@@ -14,6 +14,7 @@ import {
 import ImageService from './image.service';
 import BiddingService from './bidding.service';
 import { GetPopularProductsResult } from '../type/product/get.popular.products.result';
+import { CountProductsOption } from '../type/product/count.products.option';
 
 export default class ProductService {
   //상품 등록하기
@@ -197,6 +198,30 @@ export default class ProductService {
     }
   }
 
+  static async countProducts(option: CountProductsOption): Promise<number> {
+    try {
+      const { search, departmentId } = option;
+
+      const queryBuilder = ProductRepository.createQueryBuilder('product');
+
+      if (search) {
+        queryBuilder.where('product.product_name LIKE :name', {
+          name: `%${search}%`,
+        });
+      }
+
+      if (departmentId) {
+        queryBuilder.andWhere('product.department_id = :id', {
+          id: departmentId,
+        });
+      }
+
+      return queryBuilder.getCount();
+    } catch (error) {
+      throw new InternalServerError('상품 개수를 불러오지 못했어요.');
+    }
+  }
+
   static async getSellingProductsByUserId(
     userId: number,
     page: number,
@@ -232,12 +257,13 @@ export default class ProductService {
       const rawProducts = await ProductRepository.createQueryBuilder('product')
         .select([
           'product.id as id',
-          'product.product_name',
+          'product.product_name as productName',
           'product.user_id',
           'product.status as status',
-          'MAX(bidding.price) as user_highest_price',
-          'product.upper_bound',
-          'product.image_id',
+          'product.lower_bound as lowerBound',
+          'MAX(bidding.price) as userHighestPrice',
+          'product.upper_bound as upperBound',
+          'product.image',
           'product.department_id',
           'product.created_at',
           'product.updated_at',
