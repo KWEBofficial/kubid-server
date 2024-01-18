@@ -246,6 +246,7 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
         product_name: product.productName,
         user_id: product.user.id,
         status: product.status,
+        lower_bound: product.lowerBound,
         upper_bound: product.upperBound,
         department_id: product.department.id,
         created_at: product.createdAt,
