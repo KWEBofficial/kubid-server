@@ -72,7 +72,9 @@
             "bearerAuth": []
           }
         ]
-      },
+      }
+    },
+    "/users/current-user/password": {
       "patch": {
         "tags": [
           "User"
@@ -112,6 +114,72 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CurrentUserUpdateReqDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/current-user/nickname": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/current-user/image": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "example": "any"
+                  }
+                }
               }
             }
           }
