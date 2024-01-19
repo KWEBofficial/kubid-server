@@ -74,16 +74,11 @@
         ]
       },
       "patch": {
-        "tags": [
-          "User"
-        ],
-        "summary": "현재 로그인 유저 정보 수정",
         "description": "",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
-            "required": false,
             "schema": {
               "type": "string"
             }
@@ -91,27 +86,25 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrentUserUpdateResDTO"
-                }
-              }
-            }
+            "description": "OK"
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
-          "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CurrentUserUpdateReqDTO"
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "example": "any"
+                  },
+                  "nickname": {
+                    "example": "any"
+                  },
+                  "image": {
+                    "example": "any"
+                  }
+                }
               }
             }
           }
@@ -183,6 +176,39 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/users/current-user/product/sold": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/users/current-user/product/buy": {
@@ -387,7 +413,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/products/register": {
       "post": {
         "description": "",
         "parameters": [
@@ -405,6 +433,20 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tags": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -592,6 +634,33 @@
           }
         }
       },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/products/modify/{productId}": {
       "patch": {
         "description": "",
         "parameters": [
@@ -645,8 +714,10 @@
             }
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/products/sell/{productId}": {
+      "post": {
         "description": "",
         "parameters": [
           {
@@ -660,26 +731,6 @@
           {
             "name": "Authorization",
             "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/products/sell/{productId}": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "productId",
-            "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
             }
