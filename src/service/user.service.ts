@@ -17,7 +17,7 @@ export default class UserService {
         relations: ['department', 'image'],
       });
     } catch (error) {
-      throw new InternalServerError('유저 정보를 불러오지 못했어요.');
+      throw new InternalServerError('유저 정보를 불러오지 못했어요');
     }
   }
 
@@ -25,7 +25,7 @@ export default class UserService {
     try {
       return await UserRepository.findOne({ where: { email } });
     } catch (error) {
-      throw new InternalServerError('유저 정보를 불러오지 못했어요.');
+      throw new InternalServerError('유저 정보를 불러오지 못했어요');
     }
   }
 
@@ -42,11 +42,10 @@ export default class UserService {
         department: { ...department },
       };
 
-
       const user = UserRepository.create(createUserDAO);
       return await UserRepository.save(user);
     } catch (error) {
-      throw new InternalServerError('유저 정보를 저장하지 못했어요.');
+      throw new InternalServerError('유저 정보를 저장하지 못했어요');
     }
   }
 
@@ -57,7 +56,7 @@ export default class UserService {
     const updateUserDAO = UpdateUserPasswordDTO;
     const updateResult = await UserRepository.update(id, updateUserDAO);
     if (!updateResult.affected)
-      throw new InternalServerError('유저 정보를 수정하지 못했어요.');
+      throw new InternalServerError('유저 정보를 수정하지 못했어요');
 
     const user = await UserService.getUserById(id);
     if (!user)
@@ -75,12 +74,12 @@ export default class UserService {
     const updateUserNicknameDAO = updateUserNicknameDTO;
     const updateResult = await UserRepository.update(id, updateUserNicknameDAO);
     if (!updateResult.affected)
-      throw new InternalServerError('유저 정보를 수정하지 못했어요.');
+      throw new InternalServerError('유저 정보를 수정하지 못했어요');
 
     const user = await UserService.getUserById(id);
     if (!user)
       throw new InternalServerError(
-        '일시적인 오류가 발생했어요. 다시 시도해 주세요.',
+        '일시적인 오류가 발생했어요 다시 시도해 주세요',
       );
 
     return user;
@@ -96,12 +95,12 @@ export default class UserService {
       updateUserProfileImageDAO,
     );
     if (!updateResult.affected)
-      throw new InternalServerError('유저 정보를 수정하지 못했어요.');
+      throw new InternalServerError('유저 정보를 수정하지 못했어요');
 
     const user = await UserService.getUserById(id);
     if (!user)
       throw new InternalServerError(
-        '일시적인 오류가 발생했어요. 다시 시도해 주세요.',
+        '일시적인 오류가 발생했어요 다시 시도해 주세요',
       );
 
     return user;
@@ -119,7 +118,7 @@ export default class UserService {
         return null; // Product not found
       }
     } catch (error) {
-      throw new InternalServerError('유저 정보를 불러오지 못했어요.');
+      throw new InternalServerError('유저 정보를 불러오지 못했어요');
     }
   }
 }

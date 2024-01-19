@@ -13,7 +13,7 @@ export default class TagService {
 
       return tags.map((tag) => tag.tag);
     } catch (error) {
-      throw new InternalServerError('태그 정보를 불러오지 못했어요.');
+      throw new InternalServerError('태그 정보를 불러오지 못했어요');
     }
   }
   static async createTag(
@@ -26,7 +26,7 @@ export default class TagService {
         where: { id: productid },
       });
       if (!product) {
-        throw new InternalServerError('제품을 찾을 수 없습니다.');
+        throw new InternalServerError('제품을 찾을 수 없습니다');
       }
 
       const existingTags = await TagRepository.find({
@@ -38,14 +38,12 @@ export default class TagService {
       });
 
       if (existingTags && existingTags.length > 0) {
-        throw new InternalServerError('이미 태그가 지정되어 있습니다.');
+        throw new InternalServerError('이미 태그가 지정되어 있습니다');
       }
 
       // 태그가 3개 이상인 경우 오류 발생
       if (tags.length > 3) {
-        throw new InternalServerError(
-          '태그는 최대 3개까지 지정할 수 있습니다.',
-        );
+        throw new InternalServerError('태그는 최대 3개까지 지정할 수 있습니다');
       }
 
       // 여러 개의 태그를 생성하고 저장합니다.
@@ -59,9 +57,9 @@ export default class TagService {
       // 데이터베이스에 새로운 태그 레코드를 한 번에 추가
       await TagRepository.save(newTags);
 
-      return '태그가 생성되었습니다.';
+      return '태그가 생성되었습니다';
     } catch (error) {
-      throw new InternalServerError('태그 생성에 실패했습니다.');
+      throw new InternalServerError('태그 생성에 실패했습니다');
     }
   }
   static async deleteTag(tagId: number): Promise<string | null> {
@@ -72,15 +70,15 @@ export default class TagService {
       });
 
       if (!tagToDelete) {
-        throw new InternalServerError('삭제할 태그를 찾을 수 없습니다.');
+        throw new InternalServerError('삭제할 태그를 찾을 수 없습니다');
       }
 
       // 태그를 삭제
       await TagRepository.delete(tagId);
 
-      return '태그가 삭제되었습니다.';
+      return '태그가 삭제되었습니다';
     } catch (error) {
-      throw new InternalServerError('태그 삭제에 실패했습니다.');
+      throw new InternalServerError('태그 삭제에 실패했습니다');
     }
   }
 }
