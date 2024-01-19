@@ -32,7 +32,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
     }
-    const department = await DepartmentService.getDepartmentById(seller.id);
+    const department = await UserService.getUserDepartmentById(seller.id);
     if (!department) {
       throw new InternalServerError(
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',

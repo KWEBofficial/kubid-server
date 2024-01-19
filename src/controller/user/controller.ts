@@ -39,7 +39,6 @@ export const getUser: RequestHandler = async (req, res, next) => {
     const userId = req.userId;
     if (!userId) throw new BadRequestError('temp');
     const user = await UserService.getUserById(userId);
-
     if (!user) throw new BadRequestError('등록되어 있지 않은 사용자에요!');
     res.status(200).json({
       id: user.id,
