@@ -29,7 +29,11 @@ const passportVerify = async (email: string, password: string, done: any) => {
       return;
     } else {
       // 비밀번호가 다를 경우 에러 표시
-      done(null, false, new UnauthorizedError('비밀번호가 틀렸어요'));
+      done(
+        null,
+        false,
+        new UnauthorizedError('아이디 또는 비밀번호가 틀렸어요'),
+      );
     }
   } catch (error) {
     console.error(error);
