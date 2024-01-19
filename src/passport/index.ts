@@ -18,7 +18,7 @@ const passportVerify = async (email: string, password: string, done: any) => {
     const user = await UserService.getUserByEmail(email);
     // 검색된 유저 데이터가 없다면 에러 표시
     if (!user) {
-      done(null, false, new UnauthorizedError('등록되지 않은 이메일이에요.'));
+      done(null, false, new UnauthorizedError('등록되지 않은 이메일이에요'));
       return;
     }
     // 검색된 유저 데이터가 있다면 유저 해시된 비밀번호 비교
@@ -29,7 +29,7 @@ const passportVerify = async (email: string, password: string, done: any) => {
       return;
     } else {
       // 비밀번호가 다를 경우 에러 표시
-      done(null, false, new UnauthorizedError('비밀번호가 틀렸어요.'));
+      done(null, false, new UnauthorizedError('비밀번호가 틀렸어요'));
     }
   } catch (error) {
     console.error(error);
@@ -52,7 +52,7 @@ const JWTVerify = async (jwtPayload: any, done: any) => {
       return;
     }
     // 유저 데이터가 없을 경우 에러 표시
-    done(null, false, { reason: '올바르지 않은 인증정보 입니다.' });
+    done(null, false, { reason: '올바르지 않은 인증정보 입니다' });
   } catch (error) {
     console.error(error);
     done(error);
