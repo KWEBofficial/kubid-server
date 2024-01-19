@@ -8,6 +8,7 @@ import { UpdateUserProfileImageDTO } from '../type/user/update.input';
 import { InternalServerError } from '../util/customErrors';
 import ProductRepository from '../repository/product.repository';
 import DepartmentService from './department.service';
+import Department from '../entity/department.entity';
 
 export default class UserService {
   static async getUserById(id: number): Promise<User | null> {
@@ -41,7 +42,6 @@ export default class UserService {
         email: createUserDTO.email,
         department: { ...department },
       };
-
 
       const user = UserRepository.create(createUserDAO);
       return await UserRepository.save(user);
@@ -120,6 +120,25 @@ export default class UserService {
       }
     } catch (error) {
       throw new InternalServerError('유저 정보를 불러오지 못했어요.');
+    }
+  }
+
+  static async getUserDepartmentById(
+    userId: number,
+  ): Promise<Department | null> {
+    try {
+      const user = await UserRepository.findOne({
+        where: { id: userId },
+        relations: ['department'],
+      });
+
+      if (user && user.department) {
+        return user.department;
+      } else {
+        return null; // User not found or user has no associated department
+      }
+    } catch (error) {
+      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다.');
     }
   }
 }
