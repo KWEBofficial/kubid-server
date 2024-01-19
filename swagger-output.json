@@ -74,11 +74,17 @@
         ]
       },
       "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "현재 로그인 유저 정보 수정",
+
         "description": "",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -86,25 +92,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserUpdateResDTO"
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "password": {
-                    "example": "any"
-                  },
-                  "nickname": {
-                    "example": "any"
-                  },
-                  "image": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/CurrentUserUpdateReqDTO"
               }
             }
           }
@@ -178,6 +186,7 @@
         ]
       }
     },
+
     "/users/current-user/product/sold": {
       "get": {
         "description": "",
@@ -357,6 +366,33 @@
             "description": "sort=recent: 최근, sort=popular: 인기 (현재 판매 중인 상품 중에서, 입찰자 많은 순으로), 이외: 정렬 없음 (상품 id 순)",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "in": "query",
+            "required": false,
+            "description": "sort=popular일 때와 아닐 때의 동작이 다른 것에 주의 ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로, ex) sort=recent&departmentId=49: 컴퓨터학과 상품들을 최근 순으로",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "페이지 번호",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "페이지당 상품 개수",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -707,6 +743,26 @@
           {
             "name": "Authorization",
             "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/products/sell/{productId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
