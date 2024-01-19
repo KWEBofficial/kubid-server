@@ -34,7 +34,6 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
     }
 
     const department = await UserService.getUserDepartmentById(seller.id);
-    console.log(seller.id, department);
     if (!department) {
       throw new InternalServerError(
         '일시적인 오류가 발생했어요. 다시 시도해주세요.123',
