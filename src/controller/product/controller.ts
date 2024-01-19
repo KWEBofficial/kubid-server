@@ -328,9 +328,15 @@ export const createProduct: RequestHandler = async (req, res) => {
     const productData: CreateProductDTO = req.body;
 
     const createdProduct = await ProductService.createProduct(productData);
-    return res.status(201).json(createdProduct);
+
+    const createdTag = await TagService.createTag(
+      createdProduct.id,
+      req.body.tags,
+    );
+
+    return res.status(201).json(createdProduct && createdTag);
   } catch (error) {
-    return res.status(500).json({ error: '문제가 발생했어요.' });
+    return res.status(500).json({ error: (error as Error).message });
   }
 };
 

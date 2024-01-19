@@ -55,6 +55,7 @@ export default class TagService {
         newTag.product = product; // 제품과 연결
         return newTag;
       });
+
       // 데이터베이스에 새로운 태그 레코드를 한 번에 추가
       await TagRepository.save(newTags);
 

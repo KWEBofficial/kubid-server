@@ -2,10 +2,13 @@ import { RequestHandler } from 'express';
 import { BadRequestError, InternalServerError } from '../../util/customErrors';
 import ProductService from '../../service/product.service';
 import BiddingService from '../../service/bidding.service';
-import UpdateUserPasswordDTO from '../../type/user/update.input';
+import {
+  UpdateUserPasswordDTO,
+  UpdateUserProfileImageDTO,
+} from '../../type/user/update.input';
+import { UpdateUserNicknameDTO } from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import { generateHashedPassword } from '../../util/authentication';
-import ImageService from '../../service/image.service';
 
 export const getUser: RequestHandler = async (req, res, next) => {
   /*
@@ -102,12 +105,71 @@ export const updateUserPassword: RequestHandler = async (req, res, next) => {
     };
 
     const { email, department, createdAt, nickname } =
-      await UserService.updateUser(userId, UpdateUserPasswordDTO);
+      await UserService.updateUserPassword(userId, UpdateUserPasswordDTO);
 
     const userResponse = {
       userId,
       email,
       nickname,
+      departmentId: department.id,
+      createdAt,
+    };
+    res.status(200).json(userResponse);
+    return;
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserNickname: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const { nickname } = req.body as UpdateUserNicknameDTO;
+    if (!nickname) throw new BadRequestError('새로운 닉네임을 입력해주세요.');
+    const UpdateUserNicknameDTO: UpdateUserNicknameDTO = {
+      nickname: nickname,
+    };
+    const { email, department, createdAt, password } =
+      await UserService.updateUserNickname(userId, UpdateUserNicknameDTO);
+
+    const userResponse = {
+      userId,
+      email,
+      password,
+      departmentId: department.id,
+      createdAt,
+    };
+    res.status(200).json(userResponse);
+    return;
+  } catch (error) {
+    next(error);
+  }
+};
+export const updateUserImage: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId)
+      throw new InternalServerError(
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+      );
+
+    const { image } = req.body as UpdateUserProfileImageDTO;
+    if (!image) throw new BadRequestError('새로운 사진을 업로드해주세요.');
+    const UpdateUserProfileImageDTO: UpdateUserProfileImageDTO = {
+      image: image,
+    };
+    const { email, department, createdAt, password } =
+      await UserService.updateUserImage(userId, UpdateUserProfileImageDTO);
+
+    const userResponse = {
+      userId,
+      email,
+      password,
       departmentId: department.id,
       createdAt,
     };
@@ -181,14 +243,15 @@ export const getSellingProducts: RequestHandler = async (req, res, next) => {
       );
       userResponse.push({
         id: product.id,
-        product_name: product.productName,
+        productName: product.productName,
         user_id: product.user.id,
         status: product.status,
-        upper_bound: product.upperBound,
+        lowerBound: product.lowerBound,
+        upperBound: product.upperBound,
         department_id: product.department.id,
         created_at: product.createdAt,
         updated_at: product.updatedAt,
-        current_highest_price: maxPrice,
+        currentHighestPrice: maxPrice,
         image: product.image,
         bidderCount: bidderCount, // bidderCount 추가
       });
@@ -251,10 +314,9 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       pageSize,
     );
     for (const product of products) {
-      const current_highest_price =
+      const currentHighestPrice =
         await BiddingService.getHighestPriceByProductId(product.id);
 
-      const image = await ImageService.getImageById(product.image_id);
       // 추가: bidderCount 구하기
       const bidderCount = await BiddingService.getBidderCountByProductId(
         product.id,
@@ -263,8 +325,8 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       const { image_id, ...productWithoutImageId } = product;
       userResponse.push({
         ...productWithoutImageId,
-        current_highest_price,
-        image,
+        currentHighestPrice,
+        image: product.image,
         bidderCount: bidderCount, // bidderCount 추가
       });
     }
