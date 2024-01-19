@@ -55,6 +55,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
       department: department.departmentName,
       biddings: biddings,
       seller: seller,
+      status: product.status,
     });
   } catch (error) {
     next(error);
