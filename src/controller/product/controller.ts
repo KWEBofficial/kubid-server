@@ -93,6 +93,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
     */
     const {
       productName,
+      lowerBound,
       upperBound,
       imageId,
       desc,
@@ -102,8 +103,8 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
 
     // 입력 필수 사항을 확인합니다.
     if (!productName) throw new BadRequestError('상품 이름을 입력해 주세요.');
-    if (!upperBound)
-      throw new BadRequestError('상품의 상한가를 입력해 주세요.');
+    if (!upperBound || !lowerBound)
+      throw new BadRequestError('상품의 상한가 또는 하한가를 입력해 주세요.');
     if (!imageId) throw new BadRequestError('상품의 이미지를 입력해 주세요.');
     if (!desc) throw new BadRequestError('상품의 상세 설명을 입력해 주세요.');
     if (!tradingPlace)
@@ -113,6 +114,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
 
     const updateProductDTO: UpdateProductDTO = {
       productName,
+      lowerBound,
       upperBound,
       imageId,
       desc,
