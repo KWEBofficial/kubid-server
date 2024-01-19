@@ -23,7 +23,7 @@ export default class ProductService {
       const user = await UserService.getUserById(productData.user_id);
       const image = await ImageService.getImageById(productData.imageId);
       if (!user) {
-        throw new Error('해당 ID의 사용자가 존재하지 않습니다.');
+        throw new Error('해당 ID의 사용자가 존재하지 않습니다');
       }
 
       const CreateProductDAO = {
@@ -43,7 +43,7 @@ export default class ProductService {
 
       return await ProductRepository.save(product);
     } catch (error) {
-      throw new InternalServerError('상품을 등록하는데 실패했어요.');
+      throw new InternalServerError('상품을 등록하는데 실패했어요');
     }
   }
 
@@ -54,7 +54,7 @@ export default class ProductService {
         relations: ['image'],
       });
     } catch (error) {
-      throw new InternalServerError('해당 상품을 찾지 못했어요.');
+      throw new InternalServerError('해당 상품을 찾지 못했어요');
     }
   }
 
@@ -86,7 +86,7 @@ export default class ProductService {
       }
     } catch (error) {
       console.error(error);
-      throw new InternalServerError('제품 정보를 수정하지 못했어요.');
+      throw new InternalServerError('제품 정보를 수정하지 못했어요');
     }
   }
 
@@ -100,7 +100,7 @@ export default class ProductService {
         user: { id: userId },
       });
     } catch (error) {
-      throw new InternalServerError('제품을 취소하지 못했어요.');
+      throw new InternalServerError('제품을 취소하지 못했어요');
     }
   }
 
@@ -124,7 +124,7 @@ export default class ProductService {
         order: isRecentOrdered ? { createdAt: 'DESC' } : undefined,
       });
     } catch (error) {
-      throw new InternalServerError('상품 목록을 조회하지 못했어요.');
+      throw new InternalServerError('상품 목록을 조회하지 못했어요');
     }
   }
 
@@ -194,7 +194,7 @@ export default class ProductService {
 
       return products;
     } catch (error) {
-      throw new InternalServerError('인기 상품 목록을 조회하지 못했어요.');
+      throw new InternalServerError('인기 상품 목록을 조회하지 못했어요');
     }
   }
 
@@ -218,7 +218,7 @@ export default class ProductService {
 
       return queryBuilder.getCount();
     } catch (error) {
-      throw new InternalServerError('상품 개수를 불러오지 못했어요.');
+      throw new InternalServerError('상품 개수를 불러오지 못했어요');
     }
   }
 
@@ -242,7 +242,32 @@ export default class ProductService {
       });
     } catch (error) {
       throw new InternalServerError(
-        '현재 판매 중인 상품 목록을 불러오지 못했어요.',
+        '현재 판매 중인 상품 목록을 불러오지 못했어요',
+      );
+    }
+  }
+
+  static async getSoldProductsByUserId(
+    userId: number,
+    page: number,
+    limit: number,
+  ): Promise<Product[]> {
+    try {
+      const skip = (page - 1) * limit;
+      return await ProductRepository.find({
+        where: {
+          user: {
+            id: userId,
+          },
+          status: 'complete',
+        },
+        relations: ['user', 'department', 'image'],
+        skip: skip,
+        take: limit,
+      });
+    } catch (error) {
+      throw new InternalServerError(
+        '현재 판매 중인 상품 목록을 불러오지 못했어요',
       );
     }
   }
@@ -288,22 +313,44 @@ export default class ProductService {
       return products;
     } catch (error) {
       throw new InternalServerError(
-        '유저가 구매 중인 상품의 입찰 내역을 불러오지 못했어요.',
+        '유저가 구매 중인 상품의 입찰 내역을 불러오지 못했어요',
       );
     }
   }
-}
-/*
-data: {
-    productName: string;
-    userId: number;
-    desc: string;
-    status: Status;
-    lowerBound: number;
-    upperBound: number;
-    imageId: number;
-    tradingPlace: string;
-    tradingTime: string;
-    department_id: string;
+
+  static async sellProduct(productId: number): Promise<Product | null> {
+    try {
+      const product = await ProductRepository.findOne({
+        where: { id: productId },
+      });
+
+      if (product) {
+        product.status = 'complete';
+        const updatedProduct = await ProductRepository.save(product);
+
+        return updatedProduct;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerError('제품을 판매하지 못했어요.');
+    }
   }
-*/
+
+  static async successfulBidProduct(productId: number): Promise<void> {
+    try {
+      const product = await ProductRepository.findOne({
+        where: { id: productId },
+      });
+
+      if (product) {
+        product.status = 'complete';
+        await ProductRepository.save(product);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerError('제품을 판매하지 못했어요.');
+    }
+  }
+}

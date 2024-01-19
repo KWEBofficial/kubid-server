@@ -10,7 +10,7 @@ export default class ImageService {
 
       return image.id;
     } catch (error) {
-      throw new InternalServerError('이미지를 준비하는데 실패했습니다.');
+      throw new InternalServerError('이미지를 준비하는데 실패했어요');
     }
   }
 
@@ -21,21 +21,21 @@ export default class ImageService {
         { url: `http://localhost:3000/${fileName}` },
       );
     } catch (error) {
-      throw new InternalServerError('이미지를 업로드하는데 실패했습니다.');
+      throw new InternalServerError('이미지를 업로드하는데 실패했어요');
     }
   }
 
   static async getImageById(id: number): Promise<ImageDTO> {
     try {
       const image = await ImageRepository.findOne({ where: { id } });
-      if (!image) throw new Error('이미지가 존재하지 않습니다.');
+      if (!image) throw new Error('이미지가 존재하지 않습니다');
 
       const url = image.url;
-      if (!url) throw new Error('이미지 URL이 존재하지 않습니다.');
+      if (!url) throw new Error('이미지 URL이 존재하지 않습니다');
 
       return { id: image.id, url: url };
     } catch (error) {
-      throw new InternalServerError('이미지를 불러오는데 실패했습니다.');
+      throw new InternalServerError('이미지를 불러오는데 실패했습니다');
     }
   }
 }

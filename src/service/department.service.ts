@@ -7,7 +7,7 @@ export default class DepartmentService {
     try {
       return DepartmentRepository.find();
     } catch (error) {
-      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다.');
+      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다');
     }
   }
 
@@ -15,7 +15,7 @@ export default class DepartmentService {
     try {
       return await DepartmentRepository.findOne({ where: { id } });
     } catch (error) {
-      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다.');
+      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다');
     }
   }
 
@@ -25,7 +25,7 @@ export default class DepartmentService {
     try {
       return await DepartmentRepository.findOne({ where: { departmentName } });
     } catch (error) {
-      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다.');
+      throw new InternalServerError('학과 정보를 불러오는데 실패했습니다');
     }
   }
 }
