@@ -2,16 +2,18 @@ import ProductRepository from '../repository/product.repository';
 import Tag from '../entity/tag.entity';
 import TagRepository from '../repository/tag.repository';
 import { InternalServerError } from '../util/customErrors';
+import { TagDTO } from '../type/tag/tag.dto';
 
 export default class TagService {
-  static async getTagsById(productid: number): Promise<string[] | null> {
+  static async getTagsById(productid: number): Promise<TagDTO[]> {
     try {
       const tags = await TagRepository.createQueryBuilder('tag')
         .select('tag.tag', 'tag') // tag 테이블에서 'tag'열만 선택합니다.
+        .addSelect('tag.id', 'id')
         .where('tag.product_id = :productId', { productId: productid }) // tag 테이블에서 parameter로 주어진 productid로 필터링 진행
         .getRawMany();
 
-      return tags.map((tag) => tag.tag);
+      return tags;
     } catch (error) {
       throw new InternalServerError('태그 정보를 불러오지 못했어요');
     }
@@ -27,18 +29,6 @@ export default class TagService {
       });
       if (!product) {
         throw new InternalServerError('제품을 찾을 수 없습니다');
-      }
-
-      const existingTags = await TagRepository.find({
-        where: {
-          product: {
-            id: productid,
-          },
-        },
-      });
-
-      if (existingTags && existingTags.length > 0) {
-        throw new InternalServerError('이미 태그가 지정되어 있습니다');
       }
 
       // 태그가 3개 이상인 경우 오류 발생

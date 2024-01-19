@@ -11,7 +11,6 @@ import ImageService from '../../service/image.service';
 import { ImageDTO } from '../../type/image/image.dto';
 import { GetPopularProductsResult } from '../../type/product/get.popular.products.result';
 import Product from '../../entity/products.entity';
-import User from '../../entity/user.entity';
 import DepartmentService from '../../service/department.service';
 
 export const getProductDetail: RequestHandler = async (req, res, next) => {
@@ -65,6 +64,7 @@ export const updateProductDetail: RequestHandler = async (req, res, next) => {
   try {
     const productId = parseInt(req.params.productId, 10);
     const product = await ProductService.getProductByProductId(productId);
+
     if (!productId || !product) {
       throw new InternalServerError(
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
@@ -325,7 +325,10 @@ export const countProducts: RequestHandler = async (req, res, next) => {
 
 export const createProduct: RequestHandler = async (req, res) => {
   try {
-    const productData: CreateProductDTO = req.body;
+    const productData: CreateProductDTO = {
+      ...req.body,
+      user_id: req.userId,
+    };
 
     const createdProduct = await ProductService.createProduct(productData);
 
