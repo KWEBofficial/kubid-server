@@ -11,11 +11,11 @@ export default class BiddingService {
         .getRawOne();
 
       if (!bid)
-        throw new InternalServerError('현재 최고입찰가를 찾지 못했어요.');
+        throw new InternalServerError('현재 최고입찰가를 찾지 못했어요');
 
       return bid.highestPrice;
     } catch (error) {
-      throw new InternalServerError('상품 목록을 불러오는데 실패했어요.');
+      throw new InternalServerError('상품 목록을 불러오는데 실패했어요');
     }
   }
 
@@ -33,7 +33,7 @@ export default class BiddingService {
 
       return biddingsWithUserId;
     } catch (error) {
-      throw new InternalServerError('상품의 입찰 내역을 불러오지 못했어요.');
+      throw new InternalServerError('상품의 입찰 내역을 불러오지 못했어요');
     }
   }
 
@@ -52,7 +52,7 @@ export default class BiddingService {
 
       return savedBidding;
     } catch (error) {
-      throw new InternalServerError('상품에 입찰하지 못했어요.');
+      throw new InternalServerError('상품에 입찰하지 못했어요');
     }
   }
 
@@ -66,7 +66,7 @@ export default class BiddingService {
         product: { id: productId },
       });
     } catch (error) {
-      throw new InternalServerError('상품의 입찰을 포기하지 못했어요.');
+      throw new InternalServerError('상품의 입찰을 포기하지 못했어요');
     }
   }
 
@@ -84,7 +84,7 @@ export default class BiddingService {
       return Number(bid.bidderCount);
     } catch (error) {
       throw new InternalServerError(
-        '해당 상품의 입찰자 수를 가져오지 못했어요.',
+        '해당 상품의 입찰자 수를 가져오지 못했어요',
       );
     }
   }
