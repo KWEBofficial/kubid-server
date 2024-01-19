@@ -9,6 +9,7 @@ import {
 import { UpdateUserNicknameDTO } from '../../type/user/update.input';
 import UserService from '../../service/user.service';
 import { generateHashedPassword } from '../../util/authentication';
+import ImageService from '../../service/image.service';
 
 export const getUser: RequestHandler = async (req, res, next) => {
   /*
@@ -477,10 +478,11 @@ export const getBuyingProducts: RequestHandler = async (req, res, next) => {
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image_id, ...productWithoutImageId } = product;
+
       userResponse.push({
         ...productWithoutImageId,
         currentHighestPrice,
-        image: product.image,
+        image: await ImageService.getImageById(image_id),
         bidderCount: bidderCount, // bidderCount 추가
       });
     }

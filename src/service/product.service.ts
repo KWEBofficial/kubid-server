@@ -296,9 +296,9 @@ export default class ProductService {
         ])
         .innerJoin('bidding', 'bidding', 'product.id = bidding.product_id')
         .where('bidding.user_id = :userId', { userId })
-        .andWhere('product.status = :productStatus', {
+        /*.andWhere('product.status = :productStatus', {
           productStatus: 'progress',
-        })
+        })*/
         .groupBy('product.id')
         .orderBy('user_bidding_last_created_at', 'DESC')
         .offset(skip)
