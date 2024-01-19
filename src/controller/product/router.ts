@@ -10,6 +10,7 @@ import {
   giveUpBidding,
   createProduct,
   countProducts,
+  sellProduct,
 } from './controller';
 
 const productRouter = Router();
@@ -23,5 +24,6 @@ productRouter.post('/bidding/:productId', decodeToken, bidProduct);
 productRouter.get('/:productId', getProductDetail);
 productRouter.patch('/modify/:productId', decodeToken, updateProductDetail);
 productRouter.delete('/:productId', decodeToken, deleteProduct);
+productRouter.post('/sell/:productId', decodeToken, sellProduct);
 
 export default productRouter;

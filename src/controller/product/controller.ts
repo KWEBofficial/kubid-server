@@ -381,3 +381,19 @@ export const giveUpBidding: RequestHandler = async (req, res, next) => {
     errorHandler(error, req, res, next);
   }
 };
+
+export const sellProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new BadRequestError('로그인이 필요합니다.');
+
+    const productId = Number(req.params.productId);
+    if (!productId) throw new BadRequestError('상품 아이디를 확인해주세요.');
+
+    await ProductService.sellProduct(productId);
+
+    res.status(204).end();
+  } catch (error) {
+    errorHandler(error, req, res, next);
+  }
+};
