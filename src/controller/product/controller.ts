@@ -11,7 +11,6 @@ import ImageService from '../../service/image.service';
 import { ImageDTO } from '../../type/image/image.dto';
 import { GetPopularProductsResult } from '../../type/product/get.popular.products.result';
 import Product from '../../entity/products.entity';
-import DepartmentService from '../../service/department.service';
 
 export const getProductDetail: RequestHandler = async (req, res, next) => {
   try {
@@ -22,6 +21,7 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
     }
+
     const maxPrice = await BiddingService.getHighestPriceByProductId(productId);
     const tagsById = await TagService.getTagsById(productId);
     const image = await ImageService.getImageById(product.image.id);
@@ -32,10 +32,12 @@ export const getProductDetail: RequestHandler = async (req, res, next) => {
         '일시적인 오류가 발생했어요. 다시 시도해주세요.',
       );
     }
+
     const department = await UserService.getUserDepartmentById(seller.id);
+    console.log(seller.id, department);
     if (!department) {
       throw new InternalServerError(
-        '일시적인 오류가 발생했어요. 다시 시도해주세요.',
+        '일시적인 오류가 발생했어요. 다시 시도해주세요.123',
       );
     }
     res.status(200).json({
@@ -194,7 +196,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   };
   #swagger.parameters['departmentId'] = {
     in: 'query',                                     
-    required: false,                     
+    required: false,                    x 
     type: "number",
     description: 'sort=popular일 때와 아닐 때의 동작이 다른 것에 주의 ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로, ex) sort=recent&departmentId=49: 컴퓨터학과 상품들을 최근 순으로'
   };
@@ -353,6 +355,9 @@ export const bidProduct: RequestHandler = async (req, res, next) => {
     const productId = Number(req.params.productId);
     if (!productId) throw new BadRequestError('상품 아이디를 확인해주세요.');
 
+    const product = await ProductService.getProductByProductId(productId);
+    if (!product) throw new InternalServerError('상품을 찾을 수 없습니다.');
+
     const price = Number(req.body.biddingPrice);
     if (!price) throw new BadRequestError('입찰 가격을 확인해주세요.');
 
@@ -361,6 +366,10 @@ export const bidProduct: RequestHandler = async (req, res, next) => {
       productId,
       price,
     );
+
+    if (product.upperBound === bidding.price) {
+      await ProductService.successfulBidProduct(productId);
+    }
 
     res.status(201).json({ bidding });
   } catch (error) {

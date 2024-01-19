@@ -15,7 +15,6 @@ import ImageService from './image.service';
 import BiddingService from './bidding.service';
 import { GetPopularProductsResult } from '../type/product/get.popular.products.result';
 import { CountProductsOption } from '../type/product/count.products.option';
-import SellProductDTO from '../type/product/sell.product';
 
 export default class ProductService {
   //상품 등록하기
@@ -338,18 +337,20 @@ export default class ProductService {
       throw new InternalServerError('제품을 판매하지 못했어요.');
     }
   }
-}
-/*
-data: {
-    productName: string;
-    userId: number;
-    desc: string;
-    status: Status;
-    lowerBound: number;
-    upperBound: number;
-    imageId: number;
-    tradingPlace: string;
-    tradingTime: string;
-    department_id: string;
+
+  static async successfulBidProduct(productId: number): Promise<void> {
+    try {
+      const product = await ProductRepository.findOne({
+        where: { id: productId },
+      });
+
+      if (product) {
+        product.status = 'complete';
+        await ProductRepository.save(product);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerError('제품을 판매하지 못했어요.');
+    }
   }
-*/
+}

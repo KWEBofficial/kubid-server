@@ -360,33 +360,6 @@
             }
           },
           {
-            "name": "departmentId",
-            "in": "query",
-            "required": false,
-            "description": "sort=popular일 때와 아닐 때의 동작이 다른 것에 주의 ex) sort=popular&departmentId=49: 컴퓨터학과 소속 입찰자가 많은 순으로, ex) sort=recent&departmentId=49: 컴퓨터학과 상품들을 최근 순으로",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "페이지 번호",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "description": "페이지당 상품 개수",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
             "name": "description",
             "in": "query",
             "schema": {
@@ -692,6 +665,9 @@
                 "type": "object",
                 "properties": {
                   "productName": {
+                    "example": "any"
+                  },
+                  "lowerBound": {
                     "example": "any"
                   },
                   "upperBound": {
