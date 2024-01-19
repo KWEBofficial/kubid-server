@@ -248,6 +248,31 @@ export default class ProductService {
     }
   }
 
+  static async getSoldProductsByUserId(
+    userId: number,
+    page: number,
+    limit: number,
+  ): Promise<Product[]> {
+    try {
+      const skip = (page - 1) * limit;
+      return await ProductRepository.find({
+        where: {
+          user: {
+            id: userId,
+          },
+          status: 'complete',
+        },
+        relations: ['user', 'department', 'image'],
+        skip: skip,
+        take: limit,
+      });
+    } catch (error) {
+      throw new InternalServerError(
+        '현재 판매 중인 상품 목록을 불러오지 못했어요',
+      );
+    }
+  }
+
   static async getBuyingProductsByUserId(
     userId: number,
     page: number,
